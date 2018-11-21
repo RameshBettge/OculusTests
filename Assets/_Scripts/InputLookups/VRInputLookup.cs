@@ -22,14 +22,14 @@ public class VRInputLookup : ScriptableObject
 
 
     public string rIndex = "Horizontal";
-    public string rIndex_NearTouch = "Horizontal";
+    //public string rIndex_NearTouch = "Horizontal";
     public KeyCode rIndex_Touch = KeyCode.Joystick1Button0;
     [Space(5)]
     public string rGrab = "Horizontal";
 
 
     [Header("Left Controller")]
-   
+
     public KeyCode lButton1 = KeyCode.Joystick1Button0;
     public KeyCode lButton1_Touch = KeyCode.Joystick1Button0;
     [Space(10)]
@@ -45,8 +45,27 @@ public class VRInputLookup : ScriptableObject
     [Space(10)]
 
     public string lIndex = "Horizontal";
-    public string lIndex_NearTouch = "Horizontal";
+    //public string lIndex_NearTouch = "Horizontal";
     public KeyCode lIndex_Touch = KeyCode.Joystick1Button0;
     [Space(5)]
     public string lGrab = "Horizontal";
+
+
+    // comfort functions
+
+    public Vector2 GetLThumb()
+    {
+        float x = Input.GetAxis(lThumbX);
+        float y = Input.GetAxis(lThumbY);
+
+        return new Vector2(x, y);
+    }
+
+    public Vector2 GetRThumb()
+    {
+        float x = Input.GetAxis(rThumbX);
+        float y = Input.GetAxis(rThumbY);
+
+        return new Vector2(x, y);
+    }
 }

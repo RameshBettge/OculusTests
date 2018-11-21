@@ -24,7 +24,7 @@ public class LookupTester : MonoBehaviour
     {
         //TestAllkeys();
         //CheckThumbsticks();
-        Test();
+        //Test();
     }
 
     private void Test()
