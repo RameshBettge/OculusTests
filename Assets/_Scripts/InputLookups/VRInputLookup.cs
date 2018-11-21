@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-// For every supported VR Headset, create one  class, which inherits from this.
-// Assign every button.
+// TODO: Make all variables private and create functions which return the input as bool or floats.
+
 [CreateAssetMenu(fileName = "VRInputLookup", menuName = "Lookups/VRInput", order = 1)]
 public class VRInputLookup : ScriptableObject
 {
@@ -14,12 +14,22 @@ public class VRInputLookup : ScriptableObject
     public KeyCode rButton2_Touch = KeyCode.Joystick1Button0;
     [Space(10)]
 
-
-    public string rJoyH = "Horizontal";
-    public string rJoyV = "Horizontal";
+    public string rThumbX = "Horizontal";
+    public string rThumbY = "Horizontal";
+    public KeyCode rThumb_Touch = KeyCode.Joystick1Button0;
+    public KeyCode rThumb_Press = KeyCode.Joystick1Button0;
     [Space(10)]
 
+
+    public string rIndex = "Horizontal";
+    public string rIndex_NearTouch = "Horizontal";
+    public KeyCode rIndex_Touch = KeyCode.Joystick1Button0;
+    [Space(5)]
+    public string rGrab = "Horizontal";
+
+
     [Header("Left Controller")]
+   
     public KeyCode lButton1 = KeyCode.Joystick1Button0;
     public KeyCode lButton1_Touch = KeyCode.Joystick1Button0;
     [Space(10)]
@@ -28,6 +38,15 @@ public class VRInputLookup : ScriptableObject
     public KeyCode lButton2_Touch = KeyCode.Joystick1Button0;
     [Space(10)]
 
-    public string lJoyH = "Horizontal";
-    public string lJoyV = "Horizontal";
+    public string lThumbX = "Horizontal";
+    public string lThumbY = "Horizontal";
+    public KeyCode lThumb_Touch = KeyCode.Joystick1Button0;
+    public KeyCode lThumb_Press = KeyCode.Joystick1Button0;
+    [Space(10)]
+
+    public string lIndex = "Horizontal";
+    public string lIndex_NearTouch = "Horizontal";
+    public KeyCode lIndex_Touch = KeyCode.Joystick1Button0;
+    [Space(5)]
+    public string lGrab = "Horizontal";
 }

@@ -15,11 +15,23 @@ MonoBehaviour:
   rButton1_Touch: 340
   rButton2: 331
   rButton2_Touch: 341
-  rJoyH: Horizontal
-  rJoyV: Horizontal
+  rThumbX: Oculus_RThumbstickX
+  rThumbY: Oculus_RThumbstickY
+  rThumb_Touch: 347
+  rThumb_Press: 339
+  rIndex: Oculus_RIndex
+  rIndex_NearTouch: Oculus_GearVR_RIndex_NearTouch
+  rIndex_Touch: 345
+  rGrab: Oculus_RGrab
   lButton1: 332
   lButton1_Touch: 342
   lButton2: 333
   lButton2_Touch: 343
-  lJoyH: Horizontal
-  lJoyV: Horizontal
+  lThumbX: Oculus_LThumbstickX
+  lThumbY: Oculus_LThumbstickY
+  lThumb_Touch: 346
+  lThumb_Press: 338
+  lIndex: Oculus_LIndex
+  lIndex_NearTouch: Horizontal
+  lIndex_Touch: 344
+  lGrab: Oculus_LGrab
