@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
+// TODO: Make sure the variables reflect the actual state even when set by VRInputSetup.cs!
 [ExecuteInEditMode]
 [System.Serializable]
 public class VRController

@@ -3,7 +3,7 @@
 [System.Serializable]
 public class InputButton
 {
-    KeyCode kC;
+    public readonly KeyCode kC;
 
     public InputButton(int joystickNum)
     {
@@ -11,7 +11,11 @@ public class InputButton
         //Debug.Log(name);
         kC = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
         //Debug.Log(kC.ToString());
+    }
 
+    public InputButton(KeyCode keyCode)
+    {
+        kC = keyCode;
     }
 
     public bool IsPressed { get { return Input.GetKey(kC); } }

@@ -251,6 +251,7 @@ GameObject:
   - component: {fileID: 62521742}
   - component: {fileID: 62521741}
   - component: {fileID: 62521743}
+  - component: {fileID: 62521744}
   m_Layer: 0
   m_Name: Tester
   m_TagString: Untagged
@@ -288,12 +289,29 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62521740}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18f9a78caaf419c4586f018d6f9c2426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lookup: {fileID: 11400000, guid: 4ad4e8fcf0918094bb138b312cca51d0, type: 2}
+--- !u!114 &62521744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 62521740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ef60fe953dbe44eb41d82a6ce500e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vrInputLookup: {fileID: 11400000, guid: 0aef1019b97918b4d916c20678184e67, type: 2}
+  Controller: 0
+  lastButtonPressed: 0
+  lastAxisUsed: 
+  lastAxisNegative: 0
+  KeysUsed: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000054010000
 --- !u!4 &213062476 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4677891204690692, guid: 85dfab9623c67784fa7894de63cd1604,
