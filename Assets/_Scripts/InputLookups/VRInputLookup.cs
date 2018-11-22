@@ -13,7 +13,13 @@ public class VRInputLookup : ScriptableObject
 
     [Tooltip("MM/DD/YY")]
     public string LastApplied = "WARNING: UNAPPLIED!";
+
+    public void UpdateLastApplied()
+    {
+        LastApplied = System.DateTime.Now.ToShortDateString() + " - " + System.DateTime.Now.ToShortTimeString();
+    }
 }
+
 
 
 [CustomEditor(typeof(VRInputLookup))]
@@ -30,7 +36,7 @@ public class VRControllerEditor : Editor
             script.Right.Apply();
             script.Left.Apply();
 
-            script.LastApplied = System.DateTime.Now.ToShortDateString() + " - " + System.DateTime.Now.ToShortTimeString();
+            script.UpdateLastApplied();
         }
     }
 }

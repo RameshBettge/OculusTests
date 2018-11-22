@@ -8,9 +8,8 @@ public class InputButton
     public InputButton(int joystickNum)
     {
         string name = "JoystickButton" + joystickNum;
-        //Debug.Log(name);
+        
         kC = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
-        //Debug.Log(kC.ToString());
     }
 
     public InputButton(KeyCode keyCode)

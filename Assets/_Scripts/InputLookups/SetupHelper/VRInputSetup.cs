@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+// TODO: Make sure the 'Last Applied' of the Lookup is updated.
 [ExecuteInEditMode]
 public class VRInputSetup : MonoBehaviour
 {
@@ -10,23 +11,65 @@ public class VRInputSetup : MonoBehaviour
 
     public VRInputLookup vrInputLookup;
 
-    public Hand Controller;
-
+    [HideInInspector] public Hand Controller;
+    [HideInInspector] public VRController c
+    {
+        get { return Controller == Hand.Left ? vrInputLookup.Left : vrInputLookup.Right; }
+    }
 
     [HideInInspector]
-    public KeyCode lastButtonPressed;
+    public int lastButtonPressed;
     [HideInInspector]
     public string lastAxisUsed;
     [HideInInspector]
     public bool lastAxisNegative;
 
-    
-    public List<KeyCode> KeysUsed;
+    [HideInInspector]
+    public List<string> AxesUsed;
+    [HideInInspector]
+    public List<int> KeysUsed;
+
+
+    // saved buttons
+    [HideInInspector] public int button1 = -1;
+    [HideInInspector] public int button1_Touch = -1;
+
+    [HideInInspector] public int button2 = -1;
+    [HideInInspector] public int button2_Touch = -1;
+
+    [HideInInspector] public int index_Touch = -1;
+
+    [HideInInspector] public int thumb_Touch = -1;
+    [HideInInspector] public int thumb_Press = -1;
+
+    // saved axes
+    [HideInInspector] public int thumbX = -1;
+    [HideInInspector] public bool thumbXInverted = false;
+
+    [HideInInspector] public int thumbY = -1;
+    [HideInInspector] public bool thumbYInverted = false;
+
+    [HideInInspector] public int index = -1;
+    [HideInInspector] public bool indexInverted = false;
+
+    [HideInInspector] public int grab = -1;
+    [HideInInspector] public bool grabInverted = false;
+
 
     private void Awake()
     {
+        CopyFromLookup();
+
+        KeysUsed = new List<int>();
+        AxesUsed = new List<string>();
+
         AddControllerKeys(vrInputLookup.Right);
         AddControllerKeys(vrInputLookup.Left);
+    }
+
+    void CopyFromLookup()
+    {
+        c.WriteToSetup(this);
     }
 
     void AddControllerKeys(VRController c)
@@ -43,14 +86,77 @@ public class VRInputSetup : MonoBehaviour
     void AddKey(InputButton b)
     {
         if (b == null) { return; }
-        if(b.kC == KeyCode.None) { return; }
+        if (b.kC == KeyCode.None) { return; }
 
-        if (KeysUsed.Contains(b.kC))
+        int num = -1;
+        if (!KeyCodeToInt(b.kC, out num)) { return; }
+
+
+
+        if (KeysUsed.Contains(num))
         {
-            Debug.LogError(b.kC.ToString() + " is used multiple Times!");
+            Debug.LogError("JoyStickButton" + num + " is used multiple Times!");
+            return;
         }
 
-        KeysUsed.Add(b.kC);
+        KeysUsed.Add(num);
+    }
+
+    // Uses duplicate code from KeyCodeToInt()
+    public int AxisToInt(string axisName)
+    {
+        char[] chars = axisName.ToCharArray();
+        char lastC = chars[chars.Length - 1];
+
+        int result = (int)char.GetNumericValue(lastC);
+
+        char secondLastC = chars[chars.Length - 2];
+        if (System.Char.IsDigit(secondLastC))
+        {
+            result += ((int)char.GetNumericValue(secondLastC)) * 10;
+        }
+
+        return result;
+    }
+
+    public bool KeyCodeToInt(KeyCode kC, out int out_result, bool enableWarning = false)
+    {
+        string warning = "Key pressed is not a joystick button!";
+
+        out_result = -1;
+        char[] chars = kC.ToString().ToCharArray();
+
+        // Check if it is a joystick button
+        if (chars[0] != 'J' || chars[1] != 'o')
+        {
+            if (enableWarning)
+            {
+                Debug.LogWarning(warning);
+            }
+
+            return false;
+        }
+
+        // check if there is a number to be parsed.
+        char lastC = chars[chars.Length - 1];
+        if (!System.Char.IsDigit(lastC))
+        {
+            if (enableWarning)
+            {
+                Debug.LogWarning(warning);
+            }
+            return false;
+        }
+
+        out_result = (int)char.GetNumericValue(lastC);
+        // check if the number at the end has 2 digits.
+        char secondLastC = chars[chars.Length - 2];
+        if (System.Char.IsDigit(secondLastC))
+        {
+            out_result += ((int)char.GetNumericValue(secondLastC)) * 10;
+        }
+
+        return true;
     }
 
     void Update()
@@ -72,100 +178,26 @@ public class VRInputSetup : MonoBehaviour
             }
         }
 
-        foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+        //foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+        //{
+        //    int num;
+        //    if(!KeyCodeToInt(key, out num)) { return; }
+        //    if (Input.GetKeyDown(key) && !KeysUsed.Contains(num))
+        //    {
+        //        lastButtonPressed = num;
+        //    }
+        //}
+        for (int i = 0; i < 20; i++) // Checks only the main joystick buttons
         {
-            if (Input.GetKeyDown(key) && !KeysUsed.Contains(key))
+            string name = "JoystickButton" + i;
+
+            KeyCode key = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
+            if (Input.GetKeyDown(key) && !KeysUsed.Contains(i))
             {
-                lastButtonPressed = key;
+
+                lastButtonPressed = i;
             }
         }
     }
 }
 
-[ExecuteInEditMode]
-[CustomEditor(typeof(VRInputSetup))]
-public class VRInputSetupInspector : Editor
-{
-    VRController c
-    {
-        get
-        {
-            if (script.Controller == VRInputSetup.Hand.Left)
-            {
-                return script.vrInputLookup.Left;
-            }
-            else
-            {
-                return script.vrInputLookup.Right;
-            }
-        }
-    }
-
-    VRInputSetup script;
-
-
-    public override void OnInspectorGUI()
-    {
-        EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object). " +
-            "Click the button next to a variable to assign the last pressed button/ the last used axis to it. " +
-            "Only usable in Play-Mode.", MessageType.Info, true);
-        DrawDefaultInspector();
-
-        EditorGUILayout.Space();
-
-        script = (VRInputSetup)target;
-
-
-
-        // Buttons
-        EditorGUILayout.HelpBox("Be sure to ALWAYS assign 'touched' buttons first!", MessageType.Warning, true);
-
-        if (GUILayout.Button("Button1"))
-        {
-            if(Unused(script.lastButtonPressed)) c.Button1 = new InputButton(script.lastButtonPressed); //Assign key if it isn't already used
-        }
-        if (GUILayout.Button("Reset Button1"))
-        {
-            RemoveKey(c.Button1);
-            c.Button1 = null;
-        }
-        EditorGUILayout.TextField("Assigned to: " + Status(c.Button1));
-
-
-
-
-        EditorGUILayout.HelpBox("An Axis will be recognized best if it is NOT exactly 1 or -1. Be sure to always assign 'touched' buttons first!", MessageType.Warning, true);
-
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField("Last Button pressed: " + script.lastButtonPressed.ToString());
-        EditorGUILayout.TextField("Last Axis used: " + script.lastAxisUsed);
-        EditorGUI.EndDisabledGroup();
-    }
-
-    bool Unused(KeyCode key)
-    {
-        bool unused = !script.KeysUsed.Contains(key);
-        if (unused) { script.KeysUsed.Add(key); }
-
-        Debug.Log(unused);
-        return unused;
-    }
-
-
-    string Status(InputButton b)
-    {
-        if (b == null) { return "Unset"; }
-        else
-        {
-            return b.kC.ToString();
-        }
-    }
-    void RemoveKey(InputButton b)
-    {
-        if (script.KeysUsed.Contains(b.kC))
-        {
-            script.KeysUsed.Remove(b.kC);
-        }
-    }
-
-}

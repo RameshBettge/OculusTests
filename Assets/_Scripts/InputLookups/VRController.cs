@@ -8,38 +8,36 @@ using UnityEditor;
 public class VRController
 {
     [Header("Buttons")]
-    [SerializeField] int button1 = 0;
-    [SerializeField] int button1_Touch = 0;
+    [SerializeField] int button1_Touch = -1;
+    [SerializeField] int button2_Touch = -1;
     [Space(10)]
 
-    [SerializeField] int button2 = 0;
-    [SerializeField] int button2_Touch = 0;
+    [SerializeField] int index_Touch = -1;
+    [SerializeField] int thumb_Touch = -1;
     [Space(10)]
 
-    [SerializeField] int index_Touch = 0;
-    [Space(10)]
-
-    [SerializeField] int thumb_Touch = 0;
-    [SerializeField] int thumb_Press = 0;
+    [SerializeField] int button1 = -1;
+    [SerializeField] int button2 = -1;
+    [SerializeField] int thumb_Press = -1;
     [Space(10)]
 
 
     [Header("Axes")]
-    [SerializeField] int thumbX = 0;
+    [SerializeField] int thumbX = -1;
     [SerializeField] bool thumbXInverted = false;
     [Space(10)]
 
-    [SerializeField] int thumbY = 0;
+    [SerializeField] int thumbY = -1;
     [SerializeField] bool thumbYInverted = false;
     [Space(10)]
 
-    [SerializeField] int index = 0;
+    [SerializeField] int index = -1;
     [SerializeField] bool indexInverted = false;
     [Space(10)]
 
-    //int rIndex_NearTouch = 0;
+    //int rIndex_NearTouch = -1;
 
-    [SerializeField] int grab = 0;
+    [SerializeField] int grab = -1;
     [SerializeField] bool grabInverted = false;
 
     // ----
@@ -66,6 +64,62 @@ public class VRController
     [HideInInspector] public InputButton Index_Touch;
     [Space(10)]
     [HideInInspector] public InputAxis Grab;
+
+    public void CopyFromSetup(VRInputSetup s)
+    {
+        button1 = s.button1;
+        button1_Touch = s.button1_Touch;
+
+        button2 = s.button2;
+        button2_Touch = s.button2_Touch;
+
+        index_Touch = s.index_Touch;
+
+        thumb_Touch = s.thumb_Touch;
+        thumb_Press = s.thumb_Press;
+
+
+        thumbX = s.thumbX;
+        thumbXInverted = s.thumbXInverted;
+
+        thumbY = s.thumbY;
+        thumbYInverted = s.thumbYInverted;
+
+        index = s.index;
+        indexInverted = s.indexInverted;
+
+        grab = s.grab;
+        grabInverted = s.grabInverted;
+
+        Apply();
+    }
+
+    public void WriteToSetup(VRInputSetup s)
+    {
+        s.button1 = button1;
+        s.button1_Touch = button1_Touch;
+
+        s.button2 = button2;
+        s.button2_Touch = button2_Touch;
+
+        s.index_Touch = index_Touch;
+
+        s.thumb_Touch = thumb_Touch;
+        s.thumb_Press = thumb_Press;
+
+
+        s.thumbX = thumbX;
+        s.thumbXInverted = thumbXInverted;
+
+        s.thumbY = thumbY;
+        s.thumbYInverted = thumbYInverted;
+
+        s.index = index;
+        s.indexInverted = indexInverted;
+
+        s.grab = grab;
+        s.grabInverted = grabInverted;
+    }
 
 
     public void Apply()
