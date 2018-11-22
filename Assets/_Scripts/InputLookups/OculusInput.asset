@@ -16,44 +16,39 @@ MonoBehaviour:
     button1_Touch: 10
     button2: 1
     button2_Touch: 11
-    thumbX: Horizontal
-    thumbY: Horizontal
-    thumb_Touch: 0
-    thumb_Press: 0
-    index: Horizontal
-    index_Touch: 0
-    grab: Horizontal
+    index_Touch: 15
+    thumb_Touch: 17
+    thumb_Press: 9
+    thumbX: 4
+    thumbXInverted: 0
+    thumbY: 5
+    thumbYInverted: 1
+    index: 10
+    indexInverted: 0
+    grab: 12
+    grabInverted: 0
+    Index:
+      name: Axis10
+    Grab:
+      name: Axis12
   Left:
-    button1: 0
-    button1_Touch: 0
-    button2: 0
-    button2_Touch: 0
-    thumbX: Horizontal
-    thumbY: Horizontal
-    thumb_Touch: 0
-    thumb_Press: 0
-    index: Horizontal
-    index_Touch: 0
-    grab: Horizontal
-  rButton1: 330
-  rButton1_Touch: 340
-  rButton2: 331
-  rButton2_Touch: 341
-  rThumbX: Oculus_RThumbstickX
-  rThumbY: Oculus_RThumbstickY
-  rThumb_Touch: 347
-  rThumb_Press: 339
-  rIndex: Oculus_RIndex
-  rIndex_Touch: 345
-  rGrab: Oculus_RGrab
-  lButton1: 332
-  lButton1_Touch: 342
-  lButton2: 333
-  lButton2_Touch: 343
-  lThumbX: Oculus_LThumbstickX
-  lThumbY: Oculus_LThumbstickY
-  lThumb_Touch: 346
-  lThumb_Press: 338
-  lIndex: Oculus_LIndex
-  lIndex_Touch: 344
-  lGrab: Oculus_LGrab
+    button1: 2
+    button1_Touch: 12
+    button2: 3
+    button2_Touch: 13
+    index_Touch: 14
+    thumb_Touch: 16
+    thumb_Press: 8
+    thumbX: 1
+    thumbXInverted: 0
+    thumbY: 2
+    thumbYInverted: 1
+    index: 9
+    indexInverted: 0
+    grab: 11
+    grabInverted: 0
+    Index:
+      name: Axis9
+    Grab:
+      name: Axis11
+  LastApplied: 11/22/2018 - 12:39 PM

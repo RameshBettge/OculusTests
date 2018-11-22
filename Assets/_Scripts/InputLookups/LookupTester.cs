@@ -6,128 +6,93 @@ using UnityEngine;
 public class LookupTester : MonoBehaviour
 {
     [SerializeField]
-    VRInputLookup c;
+    VRInputLookup lookup;
+
+    private void Start()
+    {
+
+    }
+
+  
 
     void Update()
     {
-        //CheckThumbsticks();
-        //Test();
+        //TestVRControllerButtons("R: ", lookup.Right);
+        //TestVRControllerButtons("L: ", lookup.Left);
 
-        TestVRController();
+        TestVRControllerAxes("R: ", lookup.Right);
+        TestVRControllerAxes("L: ", lookup.Left);
+
+        //LogUsedAxis();
     }
 
-    private void TestVRController()
+    private void LogUsedAxis()
     {
-        //print(c.Right.Button1.kC.ToString());
-        if (c.Right.Button1.OnDown)
+        for (int i = 1; i < 29; i++)
         {
-            print("button1 down");
+            string axis = "Axis" + i;
+            float v = Input.GetAxis(axis);
+
+            if(v > 0.1f && v < 0.9f)
+            {
+                print(axis + ": " + v);
+            }
         }
     }
 
-    private void Test()
+    private void TestVRControllerAxes(string s, VRController c)
     {
-        // r controller buttons
-        if (Input.GetKeyDown(c.rButton1))
+        if (c.Grab.Value > 0.05f)
         {
-            print("rButton1 pressed");
+            print(s + "Grab = " + c.Grab.Value);
         }
-        if (Input.GetKeyDown(c.rButton1_Touch))
+        if (c.Index.Value > 0.05f)
         {
-            print("rButton1 touched");
-        }
-        if (Input.GetKeyDown(c.rButton2))
-        {
-            print("rButton2 pressed");
-        }
-        if (Input.GetKeyDown(c.rButton2_Touch))
-        {
-            print("rButton2 touched");
+            print(s + "Index = " + c.Index.Value);
         }
 
-        // l controller Buttons
-        if (Input.GetKeyDown(c.lButton1))
-        {
-            print("lButton3 pressed");
-        }
-        if (Input.GetKeyDown(c.lButton1_Touch))
-        {
-            print("lButton3 touched");
-        }
-        if (Input.GetKeyDown(c.lButton2))
-        {
-            print("lButton4 pressed");
-        }
-        if (Input.GetKeyDown(c.lButton2_Touch))
-        {
-            print("lButton4 touched");
-        }
+        Vector2 thumb = c.ThumbAxes.Vec2;
 
-        // Grabs
-        if (Input.GetAxis(c.rGrab) > 0.05f)
+        if(thumb.sqrMagnitude > 0.01f)
         {
-            print("R Grab: " + Input.GetAxis(c.rGrab));
+            print(s + thumb);
         }
-        if (Input.GetAxis(c.lGrab) > 0.05f)
-        {
-            print("L Grab: " + Input.GetAxis(c.lGrab));
-        }
-
-        // Index Squeeze
-        if (Input.GetAxis(c.rIndex) > 0.05f)
-        {
-            print("R Index: " + Input.GetAxis(c.rIndex));
-        }
-        if (Input.GetAxis(c.lIndex) > 0.05f)
-        {
-            print("L Index: " + Input.GetAxis(c.lIndex));
-        }
-
-        // Index touches
-        if (Input.GetKey(c.rIndex_Touch))
-        {
-            print("R Index touched.");
-        }
-        if (Input.GetKey(c.lIndex_Touch))
-        {
-            print("L Index touched.");
-        }
-
-        // Thumb touches&presses
-        if (Input.GetKey(c.rThumb_Touch))
-        {
-            print("R Thumb touched.");
-        }
-        if (Input.GetKey(c.lThumb_Touch))
-        {
-            print("L Thumb touched.");
-        }
-
-        if (Input.GetKey(c.rThumb_Press))
-        {
-            print("R Thumb Pressed.");
-        }
-        if (Input.GetKey(c.lThumb_Press))
-        {
-            print("L Thumb Pressed.");
-        }
-
-
     }
 
-    private void CheckThumbsticks()
+    private void TestVRControllerButtons(string s, VRController c)
     {
-        if (!Input.GetKeyDown(KeyCode.Space)) { return; }
+        // Buttons
+        if (c.Button1.OnDown)
+        {
+            print(s + "button1 down");
+        }
+        if (c.Button1_Touch.OnDown)
+        {
+            print(s + "Button1 touched");
+        }
+        if (c.Button2.OnDown)
+        {
+            print(s + "Button2 pressed");
+        }
+        if (c.Button2_Touch.OnDown)
+        {
+            print(s + "Button2 touched");
+        }
 
-        float x = Input.GetAxisRaw("Oculus_RThumbstickX");
-        float y = Input.GetAxisRaw("Oculus_RThumbstickY");
+        if (c.Index_Touch.OnDown)
+        {
+            print(s + "Index touched");
+        }
+        if (c.Thumb_Touch.OnDown)
+        {
+            print(s + "Thumb touched.");
+        }
+        if (c.Thumb_Press.OnDown)
+        {
+            print(s + "Thumb pressed.");
+        }
 
-        print("R:" + x + " ; " + y);
 
-        x = Input.GetAxisRaw("Oculus_LThumbstickX");
-        y = Input.GetAxisRaw("Oculus_LThumbstickY");
-
-        print("L: " + x + " " + y);
-
+   
     }
 }
