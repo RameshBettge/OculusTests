@@ -17,8 +17,8 @@ public class LookupTester : MonoBehaviour
 
     void Update()
     {
-        //TestVRControllerButtons("R: ", lookup.Right);
-        //TestVRControllerButtons("L: ", lookup.Left);
+        TestVRControllerButtons("R: ", lookup.Right);
+        TestVRControllerButtons("L: ", lookup.Left);
 
         TestVRControllerAxes("R: ", lookup.Right);
         TestVRControllerAxes("L: ", lookup.Left);
@@ -64,7 +64,7 @@ public class LookupTester : MonoBehaviour
         // Buttons
         if (c.Button1.OnDown)
         {
-            print(s + "button1 down");
+            print(s + "button1 pressed");
         }
         if (c.Button1_Touch.OnDown)
         {
