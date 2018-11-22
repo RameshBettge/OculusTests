@@ -24,11 +24,11 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public bool lastAxisNegative;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<string> AxesUsed;
-    [HideInInspector]
-    public List<int> KeysUsed;
 
+    //[HideInInspector]
+    public List<int> KeysUsed;
 
     // saved buttons
     [HideInInspector] public int button1 = -1;
@@ -63,6 +63,7 @@ public class VRInputSetup : MonoBehaviour
         KeysUsed = new List<int>();
         AxesUsed = new List<string>();
 
+        // TODO: Make sure the keys are actually added to the lists. Also create AddControllerAxis-function.
         AddControllerKeys(vrInputLookup.Right);
         AddControllerKeys(vrInputLookup.Left);
     }
@@ -161,6 +162,19 @@ public class VRInputSetup : MonoBehaviour
 
     void Update()
     {
+
+        /// DEBUG
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if(KeysUsed.Count == 0) { print("keysUsed is empty."); }
+            foreach (var i in KeysUsed)
+            {
+                print(i);
+            }
+        }
+        
+        /// DEBUG END 
+
         for (int i = 1; i < 29; i++)
         {
             string axis = "Axis" + i;
@@ -192,9 +206,8 @@ public class VRInputSetup : MonoBehaviour
             string name = "JoystickButton" + i;
 
             KeyCode key = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
-            if (Input.GetKeyDown(key) && !KeysUsed.Contains(i))
+            if (Input.GetKeyDown(key) /*&& !KeysUsed.Contains(i)*/)
             {
-
                 lastButtonPressed = i;
             }
         }

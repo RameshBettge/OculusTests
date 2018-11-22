@@ -65,6 +65,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.button1_Touch = -1;
             RemoveKey(script.button1_Touch);
         }
         GUILayout.EndHorizontal();
@@ -86,6 +87,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.button2_Touch = -1;
             RemoveKey(script.button2_Touch);
         }
         GUILayout.EndHorizontal();
@@ -107,6 +109,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.index_Touch = -1;
             RemoveKey(script.index_Touch);
         }
         GUILayout.EndHorizontal();
@@ -128,6 +131,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.thumb_Touch = -1;
             RemoveKey(script.thumb_Touch);
         }
         GUILayout.EndHorizontal();
@@ -149,6 +153,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.button1 = -1;
             RemoveKey(script.button1);
         }
         GUILayout.EndHorizontal();
@@ -170,6 +175,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.button2 = -1;
             RemoveKey(script.button2);
         }
         GUILayout.EndHorizontal();
@@ -191,6 +197,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.thumb_Press = -1;
             RemoveKey(script.thumb_Press);
         }
         GUILayout.EndHorizontal();
@@ -220,18 +227,84 @@ public class VRInputSetupInspector : Editor
         {
             if (AxisIsUnused(script.lastAxisUsed))
             {
-                RemoveKey(script.thumbX);
+                RemoveAxis(script.thumbX, script.thumbXInverted);
                 script.thumbX = script.AxisToInt(script.lastAxisUsed);
                 script.thumbXInverted = script.lastAxisNegative;
             }
         }
         if (GUILayout.Button("Reset"))
         {
-            RemoveKey(script.thumbX);
+            RemoveAxis(script.thumbX, script.thumbXInverted);
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted));
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Thumb Y", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.thumbY, script.thumbYInverted);
+                script.thumbY = script.AxisToInt(script.lastAxisUsed);
+                script.thumbXInverted = script.lastAxisNegative;
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.thumbY, script.thumbYInverted);
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.thumbY, script.thumbXInverted));
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Index", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.index, script.indexInverted);
+                script.index = script.AxisToInt(script.lastAxisUsed);
+                script.thumbXInverted = script.lastAxisNegative;
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.index, script.indexInverted);
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.index, script.thumbXInverted));
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Grab", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.grab, script.grabInverted);
+                script.grab = script.AxisToInt(script.lastAxisUsed);
+                script.thumbXInverted = script.lastAxisNegative;
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.grab, script.grabInverted);
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.grab, script.thumbXInverted));
         EditorGUI.EndDisabledGroup();
 
         #endregion
@@ -328,11 +401,30 @@ public class VRInputSetupInspector : Editor
         }
     }
 
+    void RemoveAxis(int num, bool inverted)
+    {
+        string sign = "";
+        if (inverted) { sign = "(inverted) "; }
+
+        string name = sign + "Axis" + num;
+
+        if (script.AxesUsed.Contains(name))
+        {
+            script.AxesUsed.Remove(name);
+        }
+    }
+
     void RemoveKey(int num)
     {
         if (script.KeysUsed.Contains(num))
         {
             script.KeysUsed.Remove(num);
+            Debug.LogWarning("removed " + num + " out of used keys.");
+
+        }
+        else
+        {
+            Debug.LogWarning("cannot remove " + num + " because it is not in used keys.");
         }
     }
 

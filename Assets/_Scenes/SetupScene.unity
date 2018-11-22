@@ -44,7 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -234,25 +234,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ef60fe953dbe44eb41d82a6ce500e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrInputLookup: {fileID: 11400000, guid: b392a6e4bc929d14694d7c6d8b890374, type: 2}
-  Controller: 1
+  vrInputLookup: {fileID: 11400000, guid: 62a1d86a4cb30ff479ca40a47d3bf436, type: 2}
+  Controller: 0
   lastButtonPressed: 0
   lastAxisUsed: 
   lastAxisNegative: 0
   AxesUsed: []
   KeysUsed: 
-  button1: 1
-  button1_Touch: 3
-  button2: 0
-  button2_Touch: 0
-  index_Touch: 0
-  thumb_Touch: 0
-  thumb_Press: 0
-  thumbX: 0
+  button1: -1
+  button1_Touch: -1
+  button2: -1
+  button2_Touch: -1
+  index_Touch: -1
+  thumb_Touch: -1
+  thumb_Press: -1
+  thumbX: -1
   thumbXInverted: 0
-  thumbY: 0
+  thumbY: -1
   thumbYInverted: 0
-  index: 0
+  index: -1
   indexInverted: 0
-  grab: 0
+  grab: -1
   grabInverted: 0
