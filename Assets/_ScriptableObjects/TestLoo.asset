@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e0279a7a31f59646969e8ba49511090, type: 3}
-  m_Name: TestLookup
+  m_Name: TestLoo
   m_EditorClassIdentifier: 
   Right:
-    button1: -1
     button1_Touch: -1
-    button2: -1
     button2_Touch: -1
     index_Touch: -1
     thumb_Touch: -1
+    button1: -1
+    button2: -1
     thumb_Press: -1
     thumbX: -1
     thumbXInverted: 0
@@ -32,12 +32,12 @@ MonoBehaviour:
     Grab:
       name: 
   Left:
-    button1: -1
     button1_Touch: -1
-    button2: -1
     button2_Touch: -1
     index_Touch: -1
     thumb_Touch: -1
+    button1: -1
+    button2: -1
     thumb_Press: -1
     thumbX: -1
     thumbXInverted: 0

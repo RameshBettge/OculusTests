@@ -57,7 +57,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button1_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button1_Touch);
+                script.button1_Touch = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -74,7 +78,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button2_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button2_Touch);
+                script.button2_Touch = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -91,7 +99,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.index_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.index_Touch);
+                script.index_Touch = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -108,7 +120,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.thumb_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.thumb_Touch);
+                script.thumb_Touch = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -125,7 +141,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button1 = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button1);
+                script.button1 = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -142,7 +162,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button2 = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button2);
+                script.button2 = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -159,7 +183,11 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.thumb_Press = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.thumb_Press);
+                script.thumb_Press = LastButton;
+            }
         }
         if (GUILayout.Button("Reset"))
         {
@@ -192,7 +220,9 @@ public class VRInputSetupInspector : Editor
         {
             if (AxisIsUnused(script.lastAxisUsed))
             {
-                script.thumbX = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
+                RemoveKey(script.thumbX);
+                script.thumbX = script.AxisToInt(script.lastAxisUsed);
+                script.thumbXInverted = script.lastAxisNegative;
             }
         }
         if (GUILayout.Button("Reset"))
@@ -201,7 +231,7 @@ public class VRInputSetupInspector : Editor
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.thumbX));
+        EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted));
         EditorGUI.EndDisabledGroup();
 
         #endregion
@@ -250,6 +280,19 @@ public class VRInputSetupInspector : Editor
             Debug.LogError(name + " is already used!");
         }
 
+        string[] parts = name.Split(' ');
+        if (parts.Length > 1)
+        {
+            if (script.AxesUsed.Contains(parts[1]))
+            {
+                Debug.LogWarning("Axis is already used in un-iverted form. This warning also occurs when overwriting the inverted form.");
+            }
+        }
+        else if (script.AxesUsed.Contains("(inverted) " + name))
+        {
+            Debug.LogWarning("Axis is already used in inverted form. This warning also occurs when overwriting the inverted form.");
+        }
+
         return unused;
     }
 
@@ -274,12 +317,14 @@ public class VRInputSetupInspector : Editor
             return "JoystickButton" + num;
         }
     }
-    string AxisStatus(int num)
+    string AxisStatus(int num, bool inverted)
     {
         if (num == -1) { return "Unassigned!"; }
         else
         {
-            return "Axis" + num;
+            string sign = "";
+            if (inverted) { sign = "(inverted) "; }
+            return sign + "Axis" + num;
         }
     }
 

@@ -166,14 +166,14 @@ public class VRInputSetup : MonoBehaviour
             string axis = "Axis" + i;
             float v = Input.GetAxis(axis);
 
-            if (v > 0.1f && v < 0.98f)
+            if (v > 0.5f && v < 0.98f)
             {
-                lastAxisUsed = "Axis" + i;
+                lastAxisUsed = axis;
                 lastAxisNegative = false;
             }
-            if (v < -0.1f && v > -0.98f)
+            if (v < -0.5f && v > -0.98f)
             {
-                lastAxisUsed = "Axis" + i;
+                lastAxisUsed = "(inverted) " + axis;
                 lastAxisNegative = true;
             }
         }
