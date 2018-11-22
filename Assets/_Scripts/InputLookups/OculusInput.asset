@@ -11,6 +11,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e0279a7a31f59646969e8ba49511090, type: 3}
   m_Name: OculusInput
   m_EditorClassIdentifier: 
+  Right:
+    button1: 0
+    button1_Touch: 10
+    button2: 1
+    button2_Touch: 11
+    thumbX: Oculus_RThumbstickX
+    thumbY: Oculus_RThumbstickY
+    thumb_Touch: 17
+    thumb_Press: 9
+    index: Oculus_RIndex
+    index_Touch: 15
+    grab: Oculus_RGrab
+  Left:
+    button1: 350
+    button1_Touch: 350
+    button2: 350
+    button2_Touch: 350
+    thumbX: Horizontal
+    thumbY: Horizontal
+    thumb_Touch: 350
+    thumb_Press: 350
+    index: Horizontal
+    index_Touch: 350
+    grab: Horizontal
   rButton1: 330
   rButton1_Touch: 340
   rButton2: 331
@@ -20,7 +44,6 @@ MonoBehaviour:
   rThumb_Touch: 347
   rThumb_Press: 339
   rIndex: Oculus_RIndex
-  rIndex_NearTouch: Oculus_GearVR_RIndex_NearTouch
   rIndex_Touch: 345
   rGrab: Oculus_RGrab
   lButton1: 332
@@ -32,6 +55,5 @@ MonoBehaviour:
   lThumb_Touch: 346
   lThumb_Press: 338
   lIndex: Oculus_LIndex
-  lIndex_NearTouch: Horizontal
   lIndex_Touch: 344
   lGrab: Oculus_LGrab
