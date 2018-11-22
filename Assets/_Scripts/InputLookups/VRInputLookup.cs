@@ -53,24 +53,10 @@ public class VRInputLookup : ScriptableObject
     public KeyCode lIndex_Touch = KeyCode.Joystick1Button0;
     [Space(5)]
     public string lGrab = "Horizontal";
+    [Space(20)]
 
-    // comfort functions
-
-    public Vector2 GetLThumb()
-    {
-        float x = Input.GetAxis(lThumbX);
-        float y = Input.GetAxis(lThumbY);
-
-        return new Vector2(x, y);
-    }
-
-    public Vector2 GetRThumb()
-    {
-        float x = Input.GetAxis(rThumbX);
-        float y = Input.GetAxis(rThumbY);
-
-        return new Vector2(x, y);
-    }
+    [Tooltip("MM/DD/YY")]
+    public string LastApplied = "WARNING: UNAPPLIED!";
 }
 
 
@@ -81,14 +67,14 @@ public class VRControllerEditor : Editor
     {
         DrawDefaultInspector();
 
-        EditorGUILayout.Space();
-
         VRInputLookup script = (VRInputLookup)target;
 
-        if (GUILayout.Button("Apply Setting"))
+        if (GUILayout.Button("Apply Settings"))
         {
             script.Right.Apply();
             script.Left.Apply();
+
+            script.LastApplied = System.DateTime.Now.ToShortDateString() + " - " + System.DateTime.Now.ToShortTimeString();
         }
     }
 }

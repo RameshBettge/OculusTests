@@ -24,18 +24,18 @@ public class JoystickMovement : MonoBehaviour
 
     private void Move()
     {
-        Vector2 i = VRInput.GetLThumb();
-        Vector3 localMove = camera.TransformDirection(new Vector3(i.x, 0f, i.y));
+        //Vector2 i = VRInput.GetLThumb();
+        //Vector3 localMove = camera.TransformDirection(new Vector3(i.x, 0f, i.y));
 
-        localMove.y = 0f;
+        //localMove.y = 0f;
 
-        transform.position += localMove * moveSpeed * Time.deltaTime;
+        //transform.position += localMove * moveSpeed * Time.deltaTime;
     }
 
     private void Turn()
     {
-        float angle = VRInput.GetRThumb().x;
+        //float angle = VRInput.GetRThumb().x;
 
-        transform.eulerAngles += Vector3.up * angle * rotSpeed * Time.deltaTime;
+        //transform.eulerAngles += Vector3.up * angle * rotSpeed * Time.deltaTime;
     }
 }

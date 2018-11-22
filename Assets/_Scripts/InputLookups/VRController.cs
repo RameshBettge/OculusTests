@@ -74,9 +74,6 @@ public class VRController
         //string rIndex_NearTouch;
         Index_Touch = new InputButton(index_Touch);
         Grab = new InputAxis(grab);
-
-        Debug.Log(Button2.kC.ToString());
-
     }
 }
 
