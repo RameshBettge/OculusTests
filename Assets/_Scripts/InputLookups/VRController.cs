@@ -1,6 +1,8 @@
 ﻿
 using UnityEngine;
+using UnityEditor;
 
+[ExecuteInEditMode]
 [System.Serializable]
 public class VRController
 {
@@ -27,24 +29,57 @@ public class VRController
 
     // ----
 
-    public int Button1 = 0;
-    public int Button1_Touch = 0;
+    [HideInInspector] public InputButton Button1;
+    [HideInInspector] public InputButton Button1_Touch;
     [Space(10)]
 
-    public int Button2 = 0;
-    public int Button2_Touch = 0;
+    [HideInInspector] public InputButton Button2;
+    [HideInInspector] public InputButton Button2_Touch;
     [Space(10)]
 
-    public string ThumbX = "Horizontal";
-    public string ThumbY = "Horizontal";
-    public int Thumb_Touch = 0;
-    public int Thumb_Press = 0;
+    InputAxis ThumbX;
+    InputAxis ThumbY;
+    [HideInInspector] public InputAxisPair ThumbAxes;
+
+    [HideInInspector] public InputButton Thumb_Touch;
+    [HideInInspector] public InputButton Thumb_Press;
     [Space(10)]
 
 
-    public string Index = "Horizontal";
-    //string rIndex_NearTouch = "Horizontal";
-    public int Index_Touch = 0;
+    [HideInInspector] public InputAxis Index;
+    //InputAxis rIndex_NearTouch;
+    [HideInInspector] public InputButton Index_Touch;
     [Space(5)]
-    public string Grab = "Horizontal";
+    [HideInInspector] public InputAxis Grab;
+
+
+    public void Apply()
+    {
+        Button1 = new InputButton(button1);
+
+        Button1_Touch = new InputButton(button1_Touch);
+
+        Button2 = new InputButton(button2);
+        Button2_Touch = new InputButton(button2_Touch);
+
+        ThumbX = new InputAxis(thumbX);
+        ThumbY = new InputAxis(thumbY);
+        ThumbAxes = new InputAxisPair(ThumbX, ThumbY);
+
+        Thumb_Touch = new InputButton(thumb_Touch);
+        Thumb_Press = new InputButton(thumb_Press);
+
+
+        Index = new InputAxis(index);
+        //string rIndex_NearTouch;
+        Index_Touch = new InputButton(index_Touch);
+        Grab = new InputAxis(grab);
+
+        Debug.Log(Button2.kC.ToString());
+
+    }
 }
+
+
+
+

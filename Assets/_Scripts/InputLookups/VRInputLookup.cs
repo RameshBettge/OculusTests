@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 
 // TODO: Make all variables private and create functions which return the input as bool or floats.
 
@@ -53,7 +54,6 @@ public class VRInputLookup : ScriptableObject
     [Space(5)]
     public string lGrab = "Horizontal";
 
-
     // comfort functions
 
     public Vector2 GetLThumb()
@@ -70,5 +70,25 @@ public class VRInputLookup : ScriptableObject
         float y = Input.GetAxis(rThumbY);
 
         return new Vector2(x, y);
+    }
+}
+
+
+[CustomEditor(typeof(VRInputLookup))]
+public class VRControllerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        EditorGUILayout.Space();
+
+        VRInputLookup script = (VRInputLookup)target;
+
+        if (GUILayout.Button("Apply Setting"))
+        {
+            script.Right.Apply();
+            script.Left.Apply();
+        }
     }
 }

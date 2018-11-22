@@ -8,23 +8,21 @@ public class LookupTester : MonoBehaviour
     [SerializeField]
     VRInputLookup c;
 
-    List<KeyCode> codes;
-    void Start()
-    {
-        codes = new List<KeyCode>
-        {
-            //controls.lButton1, controls.lButton1_Touch,
-            //controls.lButton2, controls.lButton2_Touch,
-            //controls.rButton1, controls.rButton1_Touch,
-            //controls.rButton2, controls.rButton2_Touch
-        };
-    }
-
     void Update()
     {
-        //TestAllkeys();
         //CheckThumbsticks();
         //Test();
+
+        TestVRController();
+    }
+
+    private void TestVRController()
+    {
+        //print(c.Right.Button1.kC.ToString());
+        if (c.Right.Button1.OnDown)
+        {
+            print("button1 down");
+        }
     }
 
     private void Test()
@@ -131,16 +129,5 @@ public class LookupTester : MonoBehaviour
 
         print("L: " + x + " " + y);
 
-    }
-
-    private void TestAllkeys()
-    {
-        foreach (KeyCode kc in codes)
-        {
-            if (Input.GetKeyDown(kc))
-            {
-                print(kc.ToString() + " in " + c.ToString() + " was pressed.");
-            }
-        }
     }
 }
