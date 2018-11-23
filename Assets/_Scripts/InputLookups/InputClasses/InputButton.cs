@@ -3,23 +3,24 @@
 [System.Serializable]
 public class InputButton
 {
-    public readonly KeyCode kC;
+    [SerializeField]
+    public KeyCode button;
 
     public InputButton(int joystickNum)
     {
         string name = "JoystickButton" + joystickNum;
         
-        kC = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
+        button = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
     }
 
     public InputButton(KeyCode keyCode)
     {
-        kC = keyCode;
+        button = keyCode;
     }
 
-    public bool IsPressed { get { return Input.GetKey(kC); } }
+    public bool IsPressed { get { return Input.GetKey(button); } }
 
-    public bool OnDown { get { return Input.GetKeyDown(kC); } }
+    public bool OnDown { get { return Input.GetKeyDown(button); } }
 
-    public bool OnUp { get { return Input.GetKeyUp(kC); } }
+    public bool OnUp { get { return Input.GetKeyUp(button); } }
 }

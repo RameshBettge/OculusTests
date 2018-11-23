@@ -10,10 +10,22 @@ public class LookupTester : MonoBehaviour
 
     private void Start()
     {
-
+        //PrintAllButtons(lookup.Right);
+        //PrintAllButtons(lookup.Left);
     }
 
-  
+    private void PrintAllButtons(VRController c)
+    {
+        Debug.Log(c.Button1.button.ToString());
+        Debug.Log(c.Button1_Touch.button.ToString());
+
+        Debug.Log(c.Button2.button.ToString());
+        Debug.Log(c.Button2_Touch.button.ToString());
+
+        Debug.Log(c.Index_Touch.button.ToString());
+        Debug.Log(c.Thumb_Touch.button.ToString());
+        Debug.Log(c.Thumb_Press.button.ToString());
+    }
 
     void Update()
     {

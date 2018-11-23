@@ -42,29 +42,29 @@ public class VRController
 
     // ----
 
-    [HideInInspector] public InputButton Button1;
-    [HideInInspector] public InputButton Button1_Touch;
+    [HideInInspector] [SerializeField] public InputButton Button1;
+    [HideInInspector] [SerializeField] public InputButton Button1_Touch;
     [Space(10)]
 
-    [HideInInspector] public InputButton Button2;
-    [HideInInspector] public InputButton Button2_Touch;
+    [HideInInspector] [SerializeField] public InputButton Button2;
+    [HideInInspector] [SerializeField] public InputButton Button2_Touch;
     [Space(10)]
 
     InputAxis ThumbX;
     InputAxis ThumbY;
-    [HideInInspector] public InputAxisPair ThumbAxes;
+    [HideInInspector] [SerializeField] public InputAxisPair ThumbAxes;
 
-    [HideInInspector] public InputButton Thumb_Touch;
-    [HideInInspector] public InputButton Thumb_Press;
+    [HideInInspector] [SerializeField] public InputButton Thumb_Touch;
+    [HideInInspector] [SerializeField] public InputButton Thumb_Press;
     [Space(10)]
 
 
-    [HideInInspector] public InputAxis Index;
+    [HideInInspector] [SerializeField] public InputAxis Index;
+    [HideInInspector] [SerializeField] public InputButton Index_Touch;
+    [Space(10)]
+    [HideInInspector] [SerializeField] public InputAxis Grab;
+
     //InputAxis rIndex_NearTouch;
-    [HideInInspector] public InputButton Index_Touch;
-    [Space(10)]
-    [HideInInspector] public InputAxis Grab;
-
     public void CopyFromSetup(VRInputSetup s)
     {
         button1 = s.button1;
@@ -153,8 +153,10 @@ public class VRController
         Button2 = new InputButton(button2);
         Button2_Touch = new InputButton(button2_Touch);
 
+        
         ThumbX = new InputAxis(thumbX, thumbXInverted);
         ThumbY = new InputAxis(thumbY, thumbYInverted);
+
         ThumbAxes = new InputAxisPair(ThumbX, ThumbY);
 
         Thumb_Touch = new InputButton(thumb_Touch);

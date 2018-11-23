@@ -36,6 +36,8 @@ public class VRInputSetupInspector : Editor
         {
             if (script.Controller == VRInputSetup.Hand.Left) { script.Controller = VRInputSetup.Hand.Right; }
             else if (script.Controller == VRInputSetup.Hand.Right) { script.Controller = VRInputSetup.Hand.Left; }
+            script.CopyFromLookup();
+
 
             Debug.LogWarning("Switched to " + HandStatus() + " controller. If you haven't applied your settings, please switch back and do so before moving on!");
         }
@@ -342,6 +344,7 @@ public class VRInputSetupInspector : Editor
             script.vrInputLookup.UpdateLastApplied();
 
             string hand = HandStatus();
+
             Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
         }
 

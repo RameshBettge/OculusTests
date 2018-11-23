@@ -71,7 +71,7 @@ public class VRInputSetup : MonoBehaviour
         //AddControllerKeys(vrInputLookup.Left);
     }
 
-    void CopyFromLookup()
+    public void CopyFromLookup()
     {
         c.WriteToSetup(this);
 
