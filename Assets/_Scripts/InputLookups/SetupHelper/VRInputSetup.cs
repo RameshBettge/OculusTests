@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-// TODO: Make sure the 'Last Applied' of the Lookup is updated.
-// TODO: Create help-window reminding about apllying
-// TODO: Call Copy From Lookup when switching hands (RISK: resetting options. Maybe create seperate button)
-// TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrinput lookup. Maybe check in update.
+// TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrInputLookup. Maybe check in update.
 
 [ExecuteInEditMode]
 public class VRInputSetup : MonoBehaviour

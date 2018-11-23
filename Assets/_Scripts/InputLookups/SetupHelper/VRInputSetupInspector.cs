@@ -30,20 +30,44 @@ public class VRInputSetupInspector : Editor
         DrawDefaultInspector();
 
         EditorGUILayout.Space();
+        EditorGUILayout.Space();
 
         // Choose controller for setup
-        if (GUILayout.Button("Switch Controller to SetUp"))
+        EditorGUILayout.HelpBox("WARNING: Settings are void if they are not applied. Please apply first and only then switch Controllers.", MessageType.Warning, true);
+        if (GUILayout.Button("Switch Controller to SetUp", GUILayout.Height(30)))
         {
             if (script.Controller == VRInputSetup.Hand.Left) { script.Controller = VRInputSetup.Hand.Right; }
             else if (script.Controller == VRInputSetup.Hand.Right) { script.Controller = VRInputSetup.Hand.Left; }
             script.CopyFromLookup();
 
 
-            Debug.LogWarning("Switched to " + HandStatus() + " controller. If you haven't applied your settings, please switch back and do so before moving on!");
+            Debug.LogWarning("Switched to " + HandStatus() + " controller.");
         }
+
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(HandStatus());
+        EditorGUILayout.TextField("Current Controller: " + HandStatus());
         EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+
+        if (GUILayout.Button("Apply", GUILayout.Height(50)))
+        {
+            if (script.vrInputLookup == null)
+            {
+                Debug.LogError("No Lookup assigned!");
+                return;
+            }
+
+            VRController controller = script.Controller == VRInputSetup.Hand.Left ? script.vrInputLookup.Left : script.vrInputLookup.Right;
+            controller.CopyFromSetup(script);
+            script.vrInputLookup.UpdateLastApplied();
+
+            string hand = HandStatus();
+
+            Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
+        }
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -210,13 +234,16 @@ public class VRInputSetupInspector : Editor
         EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.Space();
+        EditorGUILayout.Space();
 
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField("Last Button pressed: " + script.lastButtonPressed.ToString());
+        EditorGUILayout.LabelField("Last Button Pressed: ", EditorStyles.boldLabel);
+        EditorGUILayout.TextField(script.lastButtonPressed.ToString());
         EditorGUI.EndDisabledGroup();
 
         #endregion
 
+        EditorGUILayout.Space();
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
@@ -326,27 +353,12 @@ public class VRInputSetupInspector : Editor
 
 
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField("Last Axis used: " + script.lastAxisUsed);
+        EditorGUILayout.LabelField("Last Axis used: ", EditorStyles.boldLabel);
+        EditorGUILayout.TextField(script.lastAxisUsed);
         EditorGUI.EndDisabledGroup();
 
-        EditorGUILayout.Space();
 
-        if (GUILayout.Button("Apply", GUILayout.Height(30)))
-        {
-            if (script.vrInputLookup == null)
-            {
-                Debug.LogError("No Lookup assigned!");
-                return;
-            }
-
-            VRController controller = script.Controller == VRInputSetup.Hand.Left ? script.vrInputLookup.Left : script.vrInputLookup.Right;
-            controller.CopyFromSetup(script);
-            script.vrInputLookup.UpdateLastApplied();
-
-            string hand = HandStatus();
-
-            Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
-        }
+        
 
     }
 
