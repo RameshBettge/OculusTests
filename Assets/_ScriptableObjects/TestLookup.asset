@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Name: TestLookup
   m_EditorClassIdentifier: 
   Right:
-    button1_Touch: 0
-    button2_Touch: 1
-    index_Touch: 2
-    thumb_Touch: 3
-    button1: 4
-    button2: 5
-    thumb_Press: 6
-    thumbX: 0
+    button1_Touch: -1
+    button2_Touch: -1
+    index_Touch: -1
+    thumb_Touch: -1
+    button1: -1
+    button2: -1
+    thumb_Press: -1
+    thumbX: -1
     thumbXInverted: 0
-    thumbY: 1
+    thumbY: -1
     thumbYInverted: 0
-    index: 2
+    index: -1
     indexInverted: 0
     grab: -1
     grabInverted: 0
     Index:
-      name: Axis-1
+      name: Axis3
     Grab:
-      name: Axis-1
+      name: Axis11
   Left:
     button1_Touch: -1
     button2_Touch: -1
@@ -39,16 +39,16 @@ MonoBehaviour:
     button1: -1
     button2: -1
     thumb_Press: -1
-    thumbX: 4
+    thumbX: -1
     thumbXInverted: 0
-    thumbY: 5
+    thumbY: -1
     thumbYInverted: 0
-    index: 6
+    index: -1
     indexInverted: 0
-    grab: 7
+    grab: -1
     grabInverted: 0
     Index:
       name: 
     Grab:
       name: 
-  LastApplied: 11/23/2018 - 8:29 AM
+  LastApplied: 'WARNING: Unassigned!'

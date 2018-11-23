@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEditor;
 
 // TODO: Make sure the 'Last Applied' of the Lookup is updated.
+// TODO: Create help-window reminding about apllying
+// TODO: Call Copy From Lookup when switching hands (RISK: resetting options. Maybe create seperate button)
+// TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrinput lookup. Maybe check in update.
+
 [ExecuteInEditMode]
 public class VRInputSetup : MonoBehaviour
 {
@@ -24,9 +28,9 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public bool lastAxisNegative;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<string> AxesUsed;
-    //[HideInInspector]
+    [HideInInspector]
     public List<int> KeysUsed;
 
 
@@ -167,14 +171,14 @@ public class VRInputSetup : MonoBehaviour
             string axis = "Axis" + i;
             float v = Input.GetAxis(axis);
 
-            if (v > 0.1f && v < 0.98f)
+            if (v > 0.5f && v < 0.98f)
             {
-                lastAxisUsed = "Axis" + i;
+                lastAxisUsed = InputAxis.FromIntBool(i, false);
                 lastAxisNegative = false;
             }
-            if (v < -0.1f && v > -0.98f)
+            if (v < -0.5f && v > -0.98f)
             {
-                lastAxisUsed = "Axis" + i;
+                lastAxisUsed = InputAxis.FromIntBool(i, true);
                 lastAxisNegative = true;
             }
         }

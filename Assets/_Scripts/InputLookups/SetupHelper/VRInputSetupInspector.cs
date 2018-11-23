@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+// TODO: Make last applied un-changeable
+
 [ExecuteInEditMode]
 [CustomEditor(typeof(VRInputSetup))]
 public class VRInputSetupInspector : Editor
@@ -230,6 +232,7 @@ public class VRInputSetupInspector : Editor
             {
                 RemoveAxis(script.thumbX, script.thumbXInverted);
                 script.thumbX = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
+                script.thumbXInverted = script.lastAxisNegative;
             }
         }
         if (GUILayout.Button("Reset"))
@@ -241,6 +244,78 @@ public class VRInputSetupInspector : Editor
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted));
         EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Thumb Y", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.thumbY, script.thumbYInverted);
+                script.thumbY = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
+                script.thumbYInverted = script.lastAxisNegative;
+
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.thumbY, script.thumbYInverted);
+            script.thumbY = -1;
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.thumbY, script.thumbYInverted));
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Index", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.index, script.indexInverted);
+                script.index = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
+                script.indexInverted = script.lastAxisNegative;
+
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.index, script.indexInverted);
+            script.index = -1;
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.index, script.indexInverted));
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Grab", EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                RemoveAxis(script.grab, script.grabInverted);
+                script.grab = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
+                script.grabInverted = script.lastAxisNegative;
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(script.grab, script.grabInverted);
+            script.grab = -1;
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.TextField(AxisStatus(script.grab, script.grabInverted));
+        EditorGUI.EndDisabledGroup();
+
 
         #endregion
 
