@@ -46,7 +46,7 @@ public class VRInputSetupInspector : Editor
 
         script = (VRInputSetup)base.target;
 
-        // Buttons
+        // ------------------------ Buttons
         #region Buttons
 
         EditorGUILayout.LabelField("Buttons", EditorStyles.boldLabel);
@@ -216,6 +216,7 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
+        //  ------------------------------- Axes
         #region Axes
 
         EditorGUILayout.LabelField("Axes", EditorStyles.boldLabel);
@@ -227,16 +228,18 @@ public class VRInputSetupInspector : Editor
         {
             if (AxisIsUnused(script.lastAxisUsed))
             {
+                RemoveAxis(script.thumbX, script.thumbXInverted);
                 script.thumbX = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
             }
         }
         if (GUILayout.Button("Reset"))
         {
-            RemoveKey(script.thumbX);
+            RemoveAxis(script.thumbX, script.thumbXInverted);
+            script.thumbX = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.thumbX));
+        EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted));
         EditorGUI.EndDisabledGroup();
 
         #endregion
@@ -309,12 +312,12 @@ public class VRInputSetupInspector : Editor
             return "JoystickButton" + num;
         }
     }
-    string AxisStatus(int num)
+    string AxisStatus(int num, bool inverted)
     {
         if (num == -1) { return "Unassigned!"; }
         else
         {
-            return "Axis" + num;
+            return InputAxis.FromIntBool(num, inverted);
         }
     }
 
@@ -323,12 +326,16 @@ public class VRInputSetupInspector : Editor
         if (script.KeysUsed.Contains(num))
         {
             script.KeysUsed.Remove(num);
-            Debug.Log(num + " was removed from the list.");
-
         }
-        else
+    }
+
+    void RemoveAxis(int num, bool inverted)
+    {
+        string name = InputAxis.FromIntBool(num, inverted);
+
+        if (script.AxesUsed.Contains(name))
         {
-            Debug.Log(num + " couldn't be removed - it isn't in the list.");
+            script.AxesUsed.Remove(name);
         }
     }
 

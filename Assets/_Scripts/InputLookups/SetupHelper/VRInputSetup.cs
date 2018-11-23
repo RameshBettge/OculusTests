@@ -86,33 +86,22 @@ public class VRInputSetup : MonoBehaviour
     //    AddKeyInt(thumb_Press);
     //}
 
-    public void AddKeyInt(int num) // TODO: add similar function for axes
+    public void AddButton(int num) // TODO: add similar function for axes
     {
         if(num < 0) { return; }
 
         KeysUsed.Add(num);
     }
-
-    void AddKey(InputButton b)
+    public void AddAxis(int num, bool inverted)
     {
-        if (b == null) { return; }
-        print(b.ToString() + " Exists.");
-        if (b.kC == KeyCode.None) { return; }
-        print(b.kC + " exists.");
+        string axisName = InputAxis.FromIntBool(num, inverted);
 
-        int num = -1;
-        if (!KeyCodeToInt(b.kC, out num)) { return; }
-
-        print("keycode is: " + num);
-
-        if (KeysUsed.Contains(num))
+        if(axisName != "")
         {
-            Debug.LogError("JoyStickButton" + num + " is used multiple Times!");
-            return;
+            AxesUsed.Add(axisName);
         }
-
-        KeysUsed.Add(num);
     }
+
 
     // Uses duplicate code from KeyCodeToInt()
     public int AxisToInt(string axisName)

@@ -30,4 +30,31 @@ public class InputAxis
             return v;
         }
     }
+
+    public static string FromIntBool(int num, bool inverted)
+    {
+        if (num < 0) { return ""; }
+
+        string sign = "";
+        if (inverted) { sign = "(inverted) "; }
+
+        return sign + "Axis" + num;
+    }
+
+    public static int ToInt(string name)
+    {
+        char[] chars = name.ToCharArray();
+        char last = chars[chars.Length - 1];
+
+        if (!char.IsDigit(last)) { return -1; }
+
+        int num = (int)System.Char.GetNumericValue(last);
+
+        char secondLast = chars[chars.Length - 2];
+        if (char.IsDigit(last))
+        {
+            num += ((int)System.Char.GetNumericValue(last)) * 10;
+        }
+        return num;
+    }
 }

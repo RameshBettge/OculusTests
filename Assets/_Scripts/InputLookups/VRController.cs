@@ -128,15 +128,19 @@ public class VRController
     public void WriteIntoList(VRInputSetup s)
     {
         //UsedKeys
-        s.AddKeyInt(button1);
-        s.AddKeyInt(button1_Touch);
-        s.AddKeyInt(button2);
-        s.AddKeyInt(button2_Touch);
-        s.AddKeyInt(index_Touch);
-        s.AddKeyInt(thumb_Touch);
-        s.AddKeyInt(thumb_Press);
+        s.AddButton(button1);
+        s.AddButton(button1_Touch);
+        s.AddButton(button2);
+        s.AddButton(button2_Touch);
+        s.AddButton(index_Touch);
+        s.AddButton(thumb_Touch);
+        s.AddButton(thumb_Press);
 
-        // TODO: Add used axes as well
+        //UsedAxes
+        s.AddAxis(thumbX, thumbXInverted);
+        s.AddAxis(thumbY, thumbYInverted);
+        s.AddAxis(index, indexInverted);
+        s.AddAxis(grab, grabInverted);
     }
 
 
