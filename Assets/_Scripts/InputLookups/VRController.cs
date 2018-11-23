@@ -92,19 +92,14 @@ public class VRController
         grab = s.grab;
         grabInverted = s.grabInverted;
 
-        s.AddKeyInt(button1);
-        s.AddKeyInt(button1_Touch);
-        s.AddKeyInt(button2);
-        s.AddKeyInt(button2_Touch);
-        s.AddKeyInt(index_Touch);
-        s.AddKeyInt(thumb_Touch);
-        s.AddKeyInt(thumb_Press);
+      
 
         Apply();
     }
 
     public void WriteToSetup(VRInputSetup s)
     {
+        //Buttons
         s.button1 = button1;
         s.button1_Touch = button1_Touch;
 
@@ -116,7 +111,7 @@ public class VRController
         s.thumb_Touch = thumb_Touch;
         s.thumb_Press = thumb_Press;
 
-
+        //Axes
         s.thumbX = thumbX;
         s.thumbXInverted = thumbXInverted;
 
@@ -128,6 +123,20 @@ public class VRController
 
         s.grab = grab;
         s.grabInverted = grabInverted;
+    }
+
+    public void WriteIntoList(VRInputSetup s)
+    {
+        //UsedKeys
+        s.AddKeyInt(button1);
+        s.AddKeyInt(button1_Touch);
+        s.AddKeyInt(button2);
+        s.AddKeyInt(button2_Touch);
+        s.AddKeyInt(index_Touch);
+        s.AddKeyInt(thumb_Touch);
+        s.AddKeyInt(thumb_Press);
+
+        // TODO: Add used axes as well
     }
 
 

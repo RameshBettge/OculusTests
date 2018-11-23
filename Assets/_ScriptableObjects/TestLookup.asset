@@ -13,12 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Right:
     button1_Touch: 0
-    button2_Touch: 0
-    index_Touch: 0
-    thumb_Touch: 0
-    button1: 0
-    button2: 0
-    thumb_Press: 0
+    button2_Touch: 1
+    index_Touch: 2
+    thumb_Touch: 3
+    button1: 4
+    button2: 5
+    thumb_Press: 6
     thumbX: -1
     thumbXInverted: 0
     thumbY: -1

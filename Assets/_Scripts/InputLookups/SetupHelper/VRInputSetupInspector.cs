@@ -46,23 +46,27 @@ public class VRInputSetupInspector : Editor
 
         script = (VRInputSetup)base.target;
 
+        // Buttons
         #region Buttons
 
         EditorGUILayout.LabelField("Buttons", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox("Be sure to ALWAYS assign 'touched' buttons first!", MessageType.Warning, true);
 
 
-
         EditorGUILayout.LabelField("Button1_Touch", EditorStyles.largeLabel);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button1_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button1_Touch);
+                script.button1_Touch = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
-            script.button1_Touch = -1;
             RemoveKey(script.button1_Touch);
+            script.button1_Touch = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -75,11 +79,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button2_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button2_Touch);
+                script.button2_Touch = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.button2_Touch);
+            script.button2_Touch = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -92,11 +101,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.index_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.index_Touch);
+                script.index_Touch = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.index_Touch);
+            script.index_Touch = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -109,11 +123,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.thumb_Touch = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.thumb_Touch);
+                script.thumb_Touch = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.thumb_Touch);
+            script.thumb_Touch = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -126,11 +145,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button1 = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button1);
+                script.button1 = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.button1);
+            script.button1 = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -143,11 +167,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.button2 = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.button2);
+                script.button2 = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.button2);
+            script.button2 = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -160,11 +189,16 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (ButtonIsUnused(script.lastButtonPressed)) script.thumb_Press = LastButton; //Assign key if it isn't already used
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(script.thumb_Press);
+                script.thumb_Press = LastButton; //Assign key if it isn't already used
+            }
         }
         if (GUILayout.Button("Reset"))
         {
             RemoveKey(script.thumb_Press);
+            script.thumb_Press = -1;
         }
         GUILayout.EndHorizontal();
         EditorGUI.BeginDisabledGroup(true);
@@ -289,6 +323,12 @@ public class VRInputSetupInspector : Editor
         if (script.KeysUsed.Contains(num))
         {
             script.KeysUsed.Remove(num);
+            Debug.Log(num + " was removed from the list.");
+
+        }
+        else
+        {
+            Debug.Log(num + " couldn't be removed - it isn't in the list.");
         }
     }
 

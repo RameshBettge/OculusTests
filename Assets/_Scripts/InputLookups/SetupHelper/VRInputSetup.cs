@@ -58,35 +58,37 @@ public class VRInputSetup : MonoBehaviour
 
     private void Awake()
     {
-        CopyFromLookup();
-
         KeysUsed = new List<int>();
         AxesUsed = new List<string>();
 
-        AddControllerKeys(vrInputLookup.Right);
-        AddControllerKeys(vrInputLookup.Left);
+        CopyFromLookup();
+
+        //AddControllerKeys(vrInputLookup.Right);
+        //AddControllerKeys(vrInputLookup.Left);
     }
 
     void CopyFromLookup()
     {
         c.WriteToSetup(this);
+
+        vrInputLookup.Right.WriteIntoList(this);
+        vrInputLookup.Left.WriteIntoList(this);
     }
 
-    void AddControllerKeys(VRController c)
-    {
-        AddKeyInt(button1);
-        AddKeyInt(button1_Touch);
-        AddKeyInt(button2);
-        AddKeyInt(button2_Touch);
-        AddKeyInt(index_Touch);
-        AddKeyInt(thumb_Touch);
-        AddKeyInt(thumb_Press);
-    }
+    //void AddControllerKeys(VRController c) //may be obsolete because this is done in CopyfromLookup
+    //{
+    //    AddKeyInt(button1);
+    //    AddKeyInt(button1_Touch);
+    //    AddKeyInt(button2);
+    //    AddKeyInt(button2_Touch);
+    //    AddKeyInt(index_Touch);
+    //    AddKeyInt(thumb_Touch);
+    //    AddKeyInt(thumb_Press);
+    //}
 
     public void AddKeyInt(int num) // TODO: add similar function for axes
     {
         if(num < 0) { return; }
-
 
         KeysUsed.Add(num);
     }
