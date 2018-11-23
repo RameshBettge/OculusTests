@@ -61,6 +61,7 @@ public class VRInputSetupInspector : Editor
         }
         if (GUILayout.Button("Reset"))
         {
+            script.button1_Touch = -1;
             RemoveKey(script.button1_Touch);
         }
         GUILayout.EndHorizontal();

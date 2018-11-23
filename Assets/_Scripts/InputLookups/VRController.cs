@@ -68,6 +68,7 @@ public class VRController
     public void CopyFromSetup(VRInputSetup s)
     {
         button1 = s.button1;
+
         button1_Touch = s.button1_Touch;
 
         button2 = s.button2;
@@ -90,6 +91,14 @@ public class VRController
 
         grab = s.grab;
         grabInverted = s.grabInverted;
+
+        s.AddKeyInt(button1);
+        s.AddKeyInt(button1_Touch);
+        s.AddKeyInt(button2);
+        s.AddKeyInt(button2_Touch);
+        s.AddKeyInt(index_Touch);
+        s.AddKeyInt(thumb_Touch);
+        s.AddKeyInt(thumb_Press);
 
         Apply();
     }

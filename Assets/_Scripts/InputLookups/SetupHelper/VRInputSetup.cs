@@ -24,9 +24,9 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public bool lastAxisNegative;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<string> AxesUsed;
-    [HideInInspector]
+    //[HideInInspector]
     public List<int> KeysUsed;
 
 
@@ -74,24 +74,34 @@ public class VRInputSetup : MonoBehaviour
 
     void AddControllerKeys(VRController c)
     {
-        AddKey(c.Button1);
-        AddKey(c.Button1_Touch);
-        AddKey(c.Button2);
-        AddKey(c.Button2_Touch);
-        AddKey(c.Index_Touch);
-        AddKey(c.Thumb_Touch);
-        AddKey(c.Thumb_Press);
+        AddKeyInt(button1);
+        AddKeyInt(button1_Touch);
+        AddKeyInt(button2);
+        AddKeyInt(button2_Touch);
+        AddKeyInt(index_Touch);
+        AddKeyInt(thumb_Touch);
+        AddKeyInt(thumb_Press);
+    }
+
+    public void AddKeyInt(int num) // TODO: add similar function for axes
+    {
+        if(num < 0) { return; }
+
+
+        KeysUsed.Add(num);
     }
 
     void AddKey(InputButton b)
     {
         if (b == null) { return; }
+        print(b.ToString() + " Exists.");
         if (b.kC == KeyCode.None) { return; }
+        print(b.kC + " exists.");
 
         int num = -1;
         if (!KeyCodeToInt(b.kC, out num)) { return; }
 
-
+        print("keycode is: " + num);
 
         if (KeysUsed.Contains(num))
         {
