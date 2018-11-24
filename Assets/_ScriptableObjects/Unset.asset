@@ -28,23 +28,23 @@ MonoBehaviour:
     grab: -1
     grabInverted: 0
     Button1:
-      button: 0
+      button: 330
     Button1_Touch:
-      button: 0
+      button: 330
     Button2:
-      button: 0
+      button: 330
     Button2_Touch:
-      button: 0
+      button: 330
     Thumb_Touch:
-      button: 0
+      button: 330
     Thumb_Press:
-      button: 0
+      button: 330
     Index:
-      name: 
+      name: Axis-1
     Index_Touch:
-      button: 0
+      button: 330
     Grab:
-      name: 
+      name: Axis-1
   Left:
     button1_Touch: -1
     button2_Touch: -1
@@ -62,21 +62,21 @@ MonoBehaviour:
     grab: -1
     grabInverted: 0
     Button1:
-      button: 0
+      button: 330
     Button1_Touch:
-      button: 0
+      button: 330
     Button2:
-      button: 0
+      button: 330
     Button2_Touch:
-      button: 0
+      button: 330
     Thumb_Touch:
-      button: 0
+      button: 330
     Thumb_Press:
-      button: 0
+      button: 330
     Index:
-      name: 
+      name: Axis-1
     Index_Touch:
-      button: 0
+      button: 330
     Grab:
-      name: 
-  LastApplied: 'WARNING: UNAPPLIED!'
+      name: Axis-1
+  LastApplied: 11/24/2018 - 8:11 PM

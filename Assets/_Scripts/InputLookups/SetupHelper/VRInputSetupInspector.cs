@@ -17,8 +17,9 @@ public class VRInputSetupInspector : Editor
         }
     }
 
-    GUIStyle keyStyle = new GUIStyle();
-    GUIStyle selectedKeyStyle = new GUIStyle();
+    GUIStyle setStyle = new GUIStyle();
+    GUIStyle errorStyle = new GUIStyle();
+    GUIStyle unassignedStyle = new GUIStyle();
 
 
     int LastButton { get { return script.lastButtonPressed; } }
@@ -27,13 +28,21 @@ public class VRInputSetupInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        selectedKeyStyle.fontSize = 12;
+        errorStyle.fontSize = 12;
         float lightness = 0.35f;
-        keyStyle.normal.textColor = new Color(lightness, lightness, lightness);
+        setStyle.normal.textColor = new Color(lightness, lightness, lightness);
 
-        selectedKeyStyle.fontSize = 12;
-        selectedKeyStyle.normal.textColor = Color.red;
-        selectedKeyStyle.fontStyle = FontStyle.Bold;
+        errorStyle.fontSize = 12;
+        errorStyle.normal.textColor = Color.red;
+        errorStyle.fontStyle = FontStyle.Bold;
+
+        unassignedStyle.fontSize = 10;
+        unassignedStyle.normal.textColor = Color.yellow;
+        unassignedStyle.normal.textColor = new Color(lightness, lightness, lightness);
+        unassignedStyle.fontStyle = FontStyle.Italic;
+
+
+
 
         GUI.enabled = false;
         EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
@@ -170,11 +179,11 @@ public class VRInputSetupInspector : Editor
         //EditorGUI.BeginDisabledGroup(true);
         if (status)
         {
-            EditorGUILayout.LabelField(JoystickStatus(currentKey), selectedKeyStyle);
+            JoystickStatus(currentKey, true);
         }
         else
         {
-            EditorGUILayout.LabelField(JoystickStatus(currentKey), keyStyle);
+            JoystickStatus(currentKey, false);
         }
         //EditorGUI.EndDisabledGroup();
 
@@ -186,13 +195,13 @@ public class VRInputSetupInspector : Editor
     AxisParameters DrawAxisInfo(string title, int axisNum, bool inverted, bool status)
     {
         AxisParameters output = new AxisParameters(axisNum, inverted);
-        
+
 
         EditorGUILayout.LabelField(title, EditorStyles.largeLabel);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            
+
             if (LastAxisIsUnused(InputAxis.FromIntBool(axisNum, inverted)))
             {
                 RemoveAxis(axisNum, inverted);
@@ -207,16 +216,14 @@ public class VRInputSetupInspector : Editor
             output.num = -1;
         }
         GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
         if (status)
         {
-            EditorGUILayout.TextField(AxisStatus(axisNum, inverted), selectedKeyStyle);
+            AxisStatus(axisNum, inverted, true);
         }
         else
         {
-            EditorGUILayout.TextField(AxisStatus(axisNum, inverted), keyStyle);
+            AxisStatus(axisNum, inverted, false);
         }
-        EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.Space();
 
@@ -246,7 +253,7 @@ public class VRInputSetupInspector : Editor
 
         string oppositeName;
 
-        if(parts.Length > 1) // if there is '(inverted)' before the axis name
+        if (parts.Length > 1) // if there is '(inverted)' before the axis name
         {
             invertedName = lastAxisUsed;
             normalName = parts[1];
@@ -265,7 +272,7 @@ public class VRInputSetupInspector : Editor
             originalIsInverted = false;
         }
 
-        if(current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
+        if (current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
 
         // TODO: Avoid having 12 if statements for creating specific error messages.
 
@@ -330,7 +337,7 @@ public class VRInputSetupInspector : Editor
         {
 
         }
-            
+
 
         return unused;
     }
@@ -352,20 +359,41 @@ public class VRInputSetupInspector : Editor
     }
 
 
-    string JoystickStatus(int num)
+    void JoystickStatus(int num, bool error)
     {
-        if (num == -1) { return "Unassigned!"; }
+        if (num == -1)
+        {
+            EditorGUILayout.LabelField("Unassigned!", unassignedStyle);
+        }
         else
         {
-            return "JoystickButton" + num;
+            if (error)
+            {
+                EditorGUILayout.LabelField("JoystickButton" + num, errorStyle);
+            }
+            else
+            {
+                EditorGUILayout.LabelField("JoystickButton" + num, setStyle);
+            }
         }
     }
-    string AxisStatus(int num, bool inverted)
+
+    void AxisStatus(int num, bool inverted, bool error)
     {
-        if (num == -1) { return "Unassigned!"; }
+        if (num == -1)
+        {
+            EditorGUILayout.LabelField("Unassigned!", unassignedStyle);
+        }
         else
         {
-            return InputAxis.FromIntBool(num, inverted);
+            if (error)
+            {
+                EditorGUILayout.LabelField(InputAxis.FromIntBool(num, inverted), errorStyle);
+            }
+            else
+            {
+                EditorGUILayout.LabelField(InputAxis.FromIntBool(num, inverted), setStyle);
+            }
         }
     }
 
@@ -383,7 +411,7 @@ public class VRInputSetupInspector : Editor
 
     void RemoveAxis(int num, bool inverted)
     {
-        if(num < 0) { return; }
+        if (num < 0) { return; }
         string name = InputAxis.FromIntBool(num, inverted);
 
         if (script.AxesUsedCurrent.Contains(name))
