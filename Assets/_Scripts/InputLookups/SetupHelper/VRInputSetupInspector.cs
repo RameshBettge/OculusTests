@@ -21,7 +21,6 @@ public class VRInputSetupInspector : Editor
     GUIStyle selectedKeyStyle = new GUIStyle();
 
 
-
     int LastButton { get { return script.lastButtonPressed; } }
 
     VRInputSetup script;
@@ -30,21 +29,34 @@ public class VRInputSetupInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        
-
         selectedKeyStyle.fontSize = 12;
 
         selectedKeyStyle.fontSize = 12;
         selectedKeyStyle.normal.textColor = Color.red;
         selectedKeyStyle.fontStyle = FontStyle.Bold;
 
+        // The next 6 lines of code have caused a crash before. If it happens again, delete them and call DrawDefaultInspector() instead.
+        GUI.enabled = false;
+        EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
+        GUI.enabled = true;
 
-        EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object). " +
-            "Click the button next to a variable to assign the last pressed button/ the last used axis to it. " +
-            "Only usable in Play-Mode.", MessageType.Info, true);
-        DrawDefaultInspector();
+        SerializedObject so = base.serializedObject;
+        EditorGUILayout.PropertyField(so.FindProperty("vrInputLookup"), true);
+        so.ApplyModifiedProperties();
 
-        EditorGUILayout.Space();
+        EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object).", MessageType.Info, true);
+
+        Color bColor = GUI.backgroundColor;
+        GUI.backgroundColor = new Color(0.5f, 1, 0.5f, 1);
+        if (GUILayout.Button("Display Manual", GUILayout.Height(30)))
+        {
+            script.DisplayManual();
+        }
+        GUI.backgroundColor = bColor;
+
+
+
+            EditorGUILayout.Space();
         EditorGUILayout.Space();
 
         // Choose controller for setup
@@ -66,7 +78,7 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
-
+        GUI.backgroundColor = Color.yellow;
         if (GUILayout.Button("Apply", GUILayout.Height(50)))
         {
             if (script.vrInputLookup == null)
@@ -83,6 +95,8 @@ public class VRInputSetupInspector : Editor
 
             Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
         }
+        GUI.backgroundColor = bColor;
+
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -142,7 +156,15 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.LabelField("Last Axis used: ", EditorStyles.boldLabel);
         EditorGUILayout.TextField(script.lastAxisUsed);
         EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        EditorGUILayout.HelpBox("Please remember to apply your settings!", MessageType.Warning, true);
     }
+
+    // ----------------------------- Methods
+
 
     int DrawButtonInfo(string title, int currentKey, bool status)
     {
@@ -219,6 +241,7 @@ public class VRInputSetupInspector : Editor
 
         return output;
     }
+
 
     string HandStatus()
     {

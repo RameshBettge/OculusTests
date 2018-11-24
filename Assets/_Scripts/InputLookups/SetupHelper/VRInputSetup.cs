@@ -6,8 +6,6 @@ using System;
 
 // TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrInputLookup. Maybe check in update.
 // TODO: Remind that one has to click in game window for input to be recognized.
-// TODO: Add reminder to 'apply' setting at the bottom!
-// TODO: Create warning in log if a key is pressed, which is assigned to other controller already 
 // TODO: Maybe add a script reference which is nothing but a manual and helper for trouble shooting. (similar to how every script is represented on top in inspector)
 
 [ExecuteInEditMode]
@@ -31,7 +29,7 @@ public class VRInputSetup : MonoBehaviour
     }
 
     [HideInInspector]
-    public int lastButtonPressed;
+    public int lastButtonPressed = 0;
     [HideInInspector]
     public string lastAxisUsed = "none";
     [HideInInspector]
@@ -147,6 +145,7 @@ public class VRInputSetup : MonoBehaviour
     private void Awake()
     {
         CopyFromLookup();
+        lastAxisUsed = "None";
     }
 
     public void CopyFromLookup()
@@ -267,7 +266,7 @@ public class VRInputSetup : MonoBehaviour
             {
                 string name = InputAxis.FromIntBool(i, true);
 
-                if (AxesUsedCurrent.Contains(name)) { Debug.Log(name + " already assigned!");  return; }
+                if (AxesUsedCurrent.Contains(name)) { Debug.Log(name + " already assigned!"); return; }
 
                 if (AxesUsedOther.Contains(name))
                 {
@@ -301,6 +300,52 @@ public class VRInputSetup : MonoBehaviour
         }
     }
 
+    public void DisplayManual()
+    {
+        string message =
+            "     ------         General         ------     " +
+            "\n" +
+            "\n" +
+            "Press a JoystickButton and it will be assigned to 'Last Button Pressed', unless it already has been assigned.\n" +
+            "\n" +
+            "Press 'Set' below a button, to assign the 'Last Button Pressed' to it.\n" +
+            "\n" +
+            "Axes work the exact same way.\n" +
+            "\n" +
+            "After assigning all Buttons and Axes on one Controller, click on apply and then on 'Switch Controller' to set up the other Controller.\n" +
+            "\n" +
+            "WARNING:\n" +
+            "If the 'Apply' button is not pressed before switching controllers or closing the scene, your changes will be void!\n" +
+            "\n" +
+            "\n" +
+            "     ------     Button specific     ------     " +
+            "\n" +
+            "\n" +
+            "Always assign the 'Touch' buttons first! This way it is safe to assign 'Press' buttons without accidently using the 'touch' variant of the same button.\n" +
+            "\n" +
+            "\n" +
+            "     ------      Axis specific      ------     " +
+            "\n" +
+            "\n" +
+            "An axis will not be recognized if it is exactly 1 or -1. This is necessary to avoid assigning the 'near pressed' axis, which only returns integers.\n" +
+            "\n" +
+            "If an axis is a joystick always move it in positive direction (right/up).\n" +
+            "This script recognizes if an axis is inverted that way." +
+            "\n" +
+            "\n" +
+            "\n" +
+            "     ------      Troubleshoot       ------     " +
+            "\n" +
+            "\n" +
+            "Check the Debug Log.\n" +
+            "\n" +
+            "Input can only be recognized if:\n" +
+            " - In play mode.\n" +
+            " - Currently in game (click in game window)";
 
+
+        EditorUtility.DisplayDialog("How to use the VRInputSetup", message, "Close");
+
+    }
 }
 

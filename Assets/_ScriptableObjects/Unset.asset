@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e0279a7a31f59646969e8ba49511090, type: 3}
-  m_Name: Empty
+  m_Name: Unset
   m_EditorClassIdentifier: 
   Right:
     button1_Touch: -1
