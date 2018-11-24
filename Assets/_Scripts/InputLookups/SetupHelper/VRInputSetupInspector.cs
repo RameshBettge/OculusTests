@@ -17,7 +17,8 @@ public class VRInputSetupInspector : Editor
         }
     }
 
-
+    GUIStyle keyStyle = new GUIStyle();
+    GUIStyle selectedKeyStyle = new GUIStyle();
 
 
 
@@ -29,8 +30,7 @@ public class VRInputSetupInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        GUIStyle keyStyle = new GUIStyle();
-        GUIStyle selectedKeyStyle = new GUIStyle();
+        
 
         selectedKeyStyle.fontSize = 12;
 
@@ -90,222 +90,24 @@ public class VRInputSetupInspector : Editor
         script = (VRInputSetup)base.target;
 
         // ------------------------ Buttons
-        #region Buttons
 
-        EditorGUILayout.LabelField("Buttons", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("Be sure to ALWAYS assign 'touched' buttons first!", MessageType.Warning, true);
+        script.button1_Touch = DrawButtonInfo("Button1_Touch", script.button1_Touch, script.Button1_TouchStatus);
+        script.button2_Touch = DrawButtonInfo("Button2_Touch", script.button2_Touch, script.Button2_TouchStatus);
 
+        script.index_Touch = DrawButtonInfo("Index_Touch", script.index_Touch, script.Index_TouchStatus);
+        script.thumb_Touch = DrawButtonInfo("Thumb_Touch", script.thumb_Touch, script.Thumb_TouchStatus);
 
-        EditorGUILayout.LabelField("Button1_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button1_Touch);
-                script.button1_Touch = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button1_Touch);
-            script.button1_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Button1_TouchStatus)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button1_Touch), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button1_Touch), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
+        script.button1 = DrawButtonInfo("Button1", script.button1, script.Button1Status);
+        script.button2 = DrawButtonInfo("Button2", script.button2, script.Button2Status);
 
-        EditorGUILayout.Space();
+        script.thumb_Press = DrawButtonInfo("Thumb_Press", script.thumb_Press, script.Thumb_PressStatus);
 
-        EditorGUILayout.LabelField("Button2_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button2_Touch);
-                script.button2_Touch = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button2_Touch);
-            script.button2_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Button2_TouchStatus)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button2_Touch), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button2_Touch), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Index_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.index_Touch);
-                script.index_Touch = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.index_Touch);
-            script.index_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Index_TouchStatus)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.index_Touch), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.index_Touch), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Thumb_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.thumb_Touch);
-                script.thumb_Touch = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.thumb_Touch);
-            script.thumb_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Thumb_TouchStatus)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.thumb_Touch), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.thumb_Touch), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Button1", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button1);
-                script.button1 = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button1);
-            script.button1 = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Button1Status)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button1), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button1), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Button2", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button2);
-                script.button2 = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button2);
-            script.button2 = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Button2Status)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button2), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.button2), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Thumb_Press", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.thumb_Press);
-                script.thumb_Press = LastButton;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.thumb_Press);
-            script.thumb_Press = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.Thumb_PressStatus)
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.thumb_Press), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(assigned + JoystickStatus(script.thumb_Press), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
         EditorGUILayout.Space();
 
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.LabelField("Last Button Pressed: ", EditorStyles.boldLabel);
         EditorGUILayout.TextField(script.lastButtonPressed.ToString());
         EditorGUI.EndDisabledGroup();
-
-        #endregion
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -454,6 +256,43 @@ public class VRInputSetupInspector : Editor
 
     }
 
+    int DrawButtonInfo(string title, int currentKey, bool status)
+    {
+        int output = currentKey; // return input
+
+        EditorGUILayout.LabelField(title, EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(currentKey);
+                output = script.lastButtonPressed;
+                script.AddButton(output, script.KeysUsedCurrent);
+
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveKey(currentKey);
+            output = -1;
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        if (status)
+        {
+            EditorGUILayout.TextField(assigned + JoystickStatus(currentKey), selectedKeyStyle);
+        }
+        else
+        {
+            EditorGUILayout.TextField(assigned + JoystickStatus(currentKey), keyStyle);
+        }
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        return output;
+    }
 
 
     string HandStatus()
@@ -530,6 +369,5 @@ public class VRInputSetupInspector : Editor
             script.AxesUsed.Remove(name);
         }
     }
-
 }
 

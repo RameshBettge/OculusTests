@@ -33,16 +33,16 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public int lastButtonPressed;
     [HideInInspector]
-    public string lastAxisUsed;
+    public string lastAxisUsed = "none";
     [HideInInspector]
     public bool lastAxisNegative;
 
     [HideInInspector]
     public List<string> AxesUsed;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<int> KeysUsedCurrent;
-    [HideInInspector]
+    //[HideInInspector]
     public List<int> KeysUsedOther;
 
 

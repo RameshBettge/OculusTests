@@ -16,6 +16,7 @@ public class InputAxis
     {
         get
         {
+            Debug.Log(name);
             float v = Input.GetAxis(name);
             v = inverted ? -v : v;
             return v;
