@@ -26,7 +26,8 @@ public class InputButton
     {
         if(num < 0)
         {
-            Debug.LogError("JoystickButton" + num + " doesn't exist!");
+            Debug.LogError("JoystickButton " + num + " doesn't exist!");
+            num = 0;
         }
 
         string name = "JoystickButton" + num;

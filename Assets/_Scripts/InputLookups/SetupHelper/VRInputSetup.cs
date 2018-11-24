@@ -308,8 +308,9 @@ public class VRInputSetup : MonoBehaviour
             "\n" +
             "First assign the VRInputLookup you want to fill.\n" +
             "To create a new one:\n" +
-            "Right-click in Project-folder -> Create -> Lookups -> VRInput" +
+            "Right-click in Project-folder -> Create -> Lookups -> VRInput\n" +
             "\n" +
+            "Start Play-Mode.\n" +
             "\n" +
             "Press a JoystickButton and it will be assigned to 'Last Button Pressed', unless it already has been assigned.\n" +
             "\n" +
@@ -321,7 +322,7 @@ public class VRInputSetup : MonoBehaviour
             "\n" +
             "\n" +
             "             IMPORTANT WARNING:\n" +
-            "If the 'Apply' button is not pressed before switching controllers or closing the scene, your changes will be lost!\n" +
+            "If the 'Apply' button is not pressed before leaving play-mode, your changes will be lost!\n" +
             "\n" +
             "\n" +
             "     ------     Button specific     ------     " +
@@ -371,48 +372,50 @@ public class VRInputSetup : MonoBehaviour
         return Controller == Hand.Left ? "Left" : "Right";
     }
 
-    //public void AskForSwitch()
-    //{
-
-    //    if (Controller == Hand.Left) { Controller = Hand.Right; }
-    //    else if (Controller == Hand.Right) { Controller = Hand.Left; }
-
-    //    int response = EditorUtility.DisplayDialogComplex("Switching Controller ...", "Please apply your changes before switching", "Apply Settings", "Discard Settings" , "Cancel");
-
-    //    if (response == 0)
-    //    {
-    //        ApplySettings();
-    //    }
-    //    else if(response == 1)
-    //    {
-    //        DisplayManual();
-    //    CopyFromLookup();
-    //    }
 
 
-    //    Debug.LogWarning("Switched to " + HandStatus() + " controller.");
-    //}
+    public void AskForSwitch()
+    {
+        int response = EditorUtility.DisplayDialogComplex("Switching Controller ...", "Please apply your changes before switching", "Apply Settings", "Discard Settings", "Cancel");
 
-    //public void ApplySettings()
-    //{
-    //    if (vrInputLookup == null)
-    //    {
-    //        Debug.LogError("No Lookup assigned!");
-    //        return;
-    //    }
+        print(response);
 
-    //    VRController controller = Controller == VRInputSetup.Hand.Left ? vrInputLookup.Left : vrInputLookup.Right;
-    //    controller.CopyFromSetup(this);
-    //    vrInputLookup.UpdateLastApplied();
+        if (response == 0)
+        {
+            ApplySettings(false);
+            SwitchController();
+        }
+        else if (response == 1)
+        {
+            SwitchController();
+        }
+    }
 
-    //    string hand = HandStatus();
+    public void SwitchController()
+    {
+        if (Controller == Hand.Left) { Controller = Hand.Right; }
+        else if (Controller == Hand.Right) { Controller = Hand.Left; }
+        CopyFromLookup();
 
-    //    Debug.LogWarning(hand + " controller's settings applied.");
-    //}
+        Debug.LogWarning("Switched to " + HandStatus() + " controller.");
+    }
 
-    //public void ChangeHands()
-    //{
+    public void ApplySettings(bool remindAboutOther)
+    {
+        if (vrInputLookup == null)
+        {
+            Debug.LogError("No Lookup assigned!");
+            return;
+        }
 
-    //}
+        currentController.CopyFromSetup(this);
+        vrInputLookup.UpdateLastApplied();
+
+        string hand = HandStatus();
+        string warning = hand + " controller's settings applied.";
+        if (remindAboutOther) { warning += " Please remember to set up the other controller as well!"; }
+
+        Debug.LogWarning(warning);
+    }
 }
 

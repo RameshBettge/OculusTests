@@ -25,11 +25,11 @@ public class VRInputSetupInspector : Editor
 
     VRInputSetup script;
 
-    string assigned = "Assigned to: ";
-
     public override void OnInspectorGUI()
     {
         selectedKeyStyle.fontSize = 12;
+        float lightness = 0.35f;
+        keyStyle.normal.textColor = new Color(lightness, lightness, lightness);
 
         selectedKeyStyle.fontSize = 12;
         selectedKeyStyle.normal.textColor = Color.red;
@@ -38,8 +38,6 @@ public class VRInputSetupInspector : Editor
         GUI.enabled = false;
         EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
         GUI.enabled = true;
-
-        EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object).", MessageType.Info, true);
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("About this script", GUILayout.Height(30)))
@@ -69,21 +67,13 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.Space();
 
         // Choose controller for setup
-        EditorGUILayout.HelpBox("WARNING: Settings are void if they are not applied. Please apply first and only then switch Controllers.", MessageType.Warning, true);
         if (GUILayout.Button("Switch Controller to SetUp", GUILayout.Height(30)))
         {
 
-            if (script.Controller == VRInputSetup.Hand.Left) { script.Controller = VRInputSetup.Hand.Right; }
-            else if (script.Controller == VRInputSetup.Hand.Right) { script.Controller = VRInputSetup.Hand.Left; }
-            script.CopyFromLookup();
-
-
-            Debug.LogWarning("Switched to " + HandStatus() + " controller.");
+            script.AskForSwitch();
         }
 
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField("Current Controller: " + HandStatus());
-        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("Current Controller: " + HandStatus(), EditorStyles.boldLabel);
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -91,19 +81,7 @@ public class VRInputSetupInspector : Editor
         GUI.backgroundColor = Color.yellow;
         if (GUILayout.Button("Apply", GUILayout.Height(50)))
         {
-            if (script.vrInputLookup == null)
-            {
-                Debug.LogError("No Lookup assigned!");
-                return;
-            }
-
-            VRController controller = script.Controller == VRInputSetup.Hand.Left ? script.vrInputLookup.Left : script.vrInputLookup.Right;
-            controller.CopyFromSetup(script);
-            script.vrInputLookup.UpdateLastApplied();
-
-            string hand = HandStatus();
-
-            Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
+            script.ApplySettings(true);
         }
         GUI.backgroundColor = bColor;
 
@@ -126,12 +104,7 @@ public class VRInputSetupInspector : Editor
 
         script.thumb_Press = DrawButtonInfo("Thumb_Press", script.thumb_Press, script.Thumb_PressStatus);
 
-        EditorGUILayout.Space();
-
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.LabelField("Last Button Pressed: ", EditorStyles.boldLabel);
-        EditorGUILayout.TextField(script.lastButtonPressed.ToString());
-        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("Last Button Pressed: " + script.lastButtonPressed.ToString(), EditorStyles.boldLabel);
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -194,16 +167,16 @@ public class VRInputSetupInspector : Editor
             output = -1;
         }
         GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
+        //EditorGUI.BeginDisabledGroup(true);
         if (status)
         {
-            EditorGUILayout.TextField(assigned + JoystickStatus(currentKey), selectedKeyStyle);
+            EditorGUILayout.LabelField(JoystickStatus(currentKey), selectedKeyStyle);
         }
         else
         {
-            EditorGUILayout.TextField(assigned + JoystickStatus(currentKey), keyStyle);
+            EditorGUILayout.LabelField(JoystickStatus(currentKey), keyStyle);
         }
-        EditorGUI.EndDisabledGroup();
+        //EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.Space();
 
