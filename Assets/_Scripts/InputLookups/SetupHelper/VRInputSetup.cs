@@ -37,12 +37,12 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public bool lastAxisNegative;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<string> AxesUsed;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<int> KeysUsedCurrent;
-    //[HideInInspector]
+    [HideInInspector]
     public List<int> KeysUsedOther;
 
 
@@ -170,7 +170,7 @@ public class VRInputSetup : MonoBehaviour
         if (num < 0) { return; }
         string axisName = InputAxis.FromIntBool(num, inverted);
 
-
+        print("Added axis: " + axisName);
         AxesUsed.Add(axisName);
     }
 

@@ -16,7 +16,6 @@ public class InputAxis
     {
         get
         {
-            Debug.Log(name);
             float v = Input.GetAxis(name);
             v = inverted ? -v : v;
             return v;
@@ -72,5 +71,17 @@ public class InputAxis
             num += ((int)System.Char.GetNumericValue(last)) * 10;
         }
         return num;
+    }
+}
+
+public struct AxisParameters
+{
+    public int num;
+    public bool inverted;
+
+    public AxisParameters(int num, bool inverted)
+    {
+        this.num = num;
+        this.inverted = inverted;
     }
 }

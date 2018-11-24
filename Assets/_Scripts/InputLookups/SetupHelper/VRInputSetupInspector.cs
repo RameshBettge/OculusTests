@@ -114,133 +114,25 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.Space();
 
         //  ------------------------------- Axes
-        #region Axes
 
         EditorGUILayout.LabelField("Axes", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox("An Axis will be recognized best if it is NOT exactly 1 or -1. If axis is a joystick always move it either right or up!", MessageType.Warning, true);
 
-        EditorGUILayout.LabelField("Thumb X", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.thumbX, script.thumbXInverted);
-                script.thumbX = script.AxisToInt(script.lastAxisUsed);
-                script.thumbXInverted = script.lastAxisNegative;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.thumbX, script.thumbXInverted);
-            script.thumbX = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.ThumbXStatus)
-        {
-            EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
+        AxisParameters info = DrawAxisInfo("ThumbX", script.thumbX, script.thumbXInverted, script.ThumbXStatus);
+        script.thumbX = info.num;
+        script.thumbXInverted = info.inverted;
 
-        EditorGUILayout.Space();
+        info = DrawAxisInfo("ThumbY", script.thumbY, script.thumbYInverted, script.ThumbYStatus);
+        script.thumbY = info.num;
+        script.thumbYInverted = info.inverted;
 
-        EditorGUILayout.LabelField("Thumb Y", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.thumbY, script.thumbYInverted);
-                script.thumbY = script.AxisToInt(script.lastAxisUsed);
-                script.thumbYInverted = script.lastAxisNegative;
+        info = DrawAxisInfo("Index", script.index, script.indexInverted, script.IndexStatus);
+        script.index = info.num;
+        script.indexInverted = info.inverted;
 
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.thumbY, script.thumbYInverted);
-            script.thumbY = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.ThumbYStatus)
-        {
-            EditorGUILayout.TextField(AxisStatus(script.thumbY, script.thumbYInverted), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(AxisStatus(script.thumbY, script.thumbYInverted), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Index", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.index, script.indexInverted);
-                script.index = script.AxisToInt(script.lastAxisUsed);
-                script.indexInverted = script.lastAxisNegative;
-
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.index, script.indexInverted);
-            script.index = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.IndexStatus)
-        {
-            EditorGUILayout.TextField(AxisStatus(script.index, script.indexInverted), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(AxisStatus(script.index, script.indexInverted), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Grab", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.grab, script.grabInverted);
-                script.grab = script.AxisToInt(script.lastAxisUsed);
-                script.grabInverted = script.lastAxisNegative;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.grab, script.grabInverted);
-            script.grab = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        if (script.GrabStatus)
-        {
-            EditorGUILayout.TextField(AxisStatus(script.grab, script.grabInverted), selectedKeyStyle);
-        }
-        else
-        {
-            EditorGUILayout.TextField(AxisStatus(script.grab, script.grabInverted), keyStyle);
-        }
-        EditorGUI.EndDisabledGroup();
-
-
-        #endregion
+        info = DrawAxisInfo("Grab", script.grab, script.grabInverted, script.GrabStatus);
+        script.grab = info.num;
+        script.grabInverted = info.inverted;
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -250,10 +142,6 @@ public class VRInputSetupInspector : Editor
         EditorGUILayout.LabelField("Last Axis used: ", EditorStyles.boldLabel);
         EditorGUILayout.TextField(script.lastAxisUsed);
         EditorGUI.EndDisabledGroup();
-
-
-
-
     }
 
     int DrawButtonInfo(string title, int currentKey, bool status)
@@ -269,7 +157,6 @@ public class VRInputSetupInspector : Editor
                 RemoveKey(currentKey);
                 output = script.lastButtonPressed;
                 script.AddButton(output, script.KeysUsedCurrent);
-
             }
         }
         if (GUILayout.Button("Reset"))
@@ -294,6 +181,46 @@ public class VRInputSetupInspector : Editor
         return output;
     }
 
+    AxisParameters DrawAxisInfo(string title, int axisNum, bool inverted, bool status)
+    {
+        AxisParameters output = new AxisParameters(axisNum, inverted);
+        
+
+        EditorGUILayout.LabelField(title, EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (AxisIsUnused(script.lastAxisUsed))
+            {
+                Debug.Log("Axis is re-assigned");
+
+                RemoveAxis(axisNum, inverted);
+                output.num = script.AxisToInt(script.lastAxisUsed);
+                output.inverted = script.lastAxisNegative;
+                script.AddAxis(output.num, output.inverted);
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(axisNum, inverted);
+            output.num = -1;
+        }
+        GUILayout.EndHorizontal();
+        EditorGUI.BeginDisabledGroup(true);
+        if (status)
+        {
+            EditorGUILayout.TextField(AxisStatus(axisNum, inverted), selectedKeyStyle);
+        }
+        else
+        {
+            EditorGUILayout.TextField(AxisStatus(axisNum, inverted), keyStyle);
+        }
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        return output;
+    }
 
     string HandStatus()
     {
@@ -304,12 +231,58 @@ public class VRInputSetupInspector : Editor
 
     bool AxisIsUnused(string name)
     {
-        bool unused = !script.AxesUsed.Contains(name);
-        if (unused) { script.AxesUsed.Add(name); }
+        bool unused = true;
+
+        bool originalIsInverted;
+
+        string[] parts = name.Split();
+
+        string invertedName;
+        string normalName;
+
+        if(parts.Length > 1) // if there is '(inverted)' before the axis name
+        {
+            invertedName = name;
+            normalName = parts[1];
+
+            originalIsInverted = true;
+        }
         else
         {
-            Debug.LogError(name + " is already used!");
+            normalName = name;
+            invertedName = "(inverted) " + name;
+
+            originalIsInverted = false;
         }
+
+        if (script.AxesUsed.Contains(normalName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(name + " is already assigned in inverted variant.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(name + " is already assigned.");
+            }
+        }
+        else if (script.AxesUsed.Contains(invertedName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(name + " is already assigned.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(name + " is already assigned in un-inverted variant.");
+            }
+        }
+
+        Debug.Log(name + " is unused = " + unused);
 
         return unused;
     }
@@ -362,6 +335,7 @@ public class VRInputSetupInspector : Editor
 
     void RemoveAxis(int num, bool inverted)
     {
+        if(num < 0) { return; }
         string name = InputAxis.FromIntBool(num, inverted);
 
         if (script.AxesUsed.Contains(name))
