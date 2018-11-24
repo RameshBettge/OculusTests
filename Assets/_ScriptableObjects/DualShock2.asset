@@ -9,23 +9,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e0279a7a31f59646969e8ba49511090, type: 3}
-  m_Name: OculusInput 1
+  m_Name: DualShock2
   m_EditorClassIdentifier: 
   Right:
-    button1_Touch: 10
-    button2_Touch: 11
-    index_Touch: 15
-    thumb_Touch: 17
-    button1: 0
-    button2: 1
-    thumb_Press: 9
-    thumbX: 4
+    button1_Touch: -1
+    button2_Touch: -1
+    index_Touch: -1
+    thumb_Touch: -1
+    button1: -1
+    button2: -1
+    thumb_Press: -1
+    thumbX: -1
     thumbXInverted: 0
-    thumbY: 5
-    thumbYInverted: 1
-    index: 10
+    thumbY: -1
+    thumbYInverted: 0
+    index: -1
     indexInverted: 0
-    grab: 12
+    grab: -1
     grabInverted: 0
     Button1:
       button: 0
@@ -40,26 +40,26 @@ MonoBehaviour:
     Thumb_Press:
       button: 0
     Index:
-      name: Axis10
+      name: 
     Index_Touch:
       button: 0
     Grab:
-      name: Axis12
+      name: 
   Left:
-    button1_Touch: 12
-    button2_Touch: 13
-    index_Touch: 14
-    thumb_Touch: 16
-    button1: 2
-    button2: 3
-    thumb_Press: 8
-    thumbX: 1
+    button1_Touch: -1
+    button2_Touch: -1
+    index_Touch: -1
+    thumb_Touch: -1
+    button1: -1
+    button2: -1
+    thumb_Press: -1
+    thumbX: -1
     thumbXInverted: 0
-    thumbY: 2
-    thumbYInverted: 1
-    index: 9
+    thumbY: -1
+    thumbYInverted: 0
+    index: -1
     indexInverted: 0
-    grab: 11
+    grab: -1
     grabInverted: 0
     Button1:
       button: 0
@@ -74,9 +74,9 @@ MonoBehaviour:
     Thumb_Press:
       button: 0
     Index:
-      name: Axis9
+      name: 
     Index_Touch:
       button: 0
     Grab:
-      name: Axis11
-  LastApplied: 11/22/2018 - 12:42 PM
+      name: 
+  LastApplied: 'WARNING: UNAPPLIED!'

@@ -31,9 +31,24 @@ public class InputAxis
         }
     }
 
+    public static string FromInt(int num)
+    {
+        if (num < 0)
+        {
+            Debug.Log("Axis" + num + " does not exist!");
+            return "";
+        }
+
+        return "Axis" + num;
+    }
+
     public static string FromIntBool(int num, bool inverted)
     {
-        if (num < 0) { return ""; }
+        if (num < 0)
+        {
+            Debug.Log("Axis" + num + " does not exist!");
+            return "";
+        }
 
         string sign = "";
         if (inverted) { sign = "(inverted) "; }

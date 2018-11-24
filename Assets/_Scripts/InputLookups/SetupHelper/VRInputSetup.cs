@@ -2,18 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 // TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrInputLookup. Maybe check in update.
+// TODO: Remind that one has to click in game window for input to be recognized.
+// TODO: Add reminder to 'apply' setting at the bottom!
+// TODO: Create warning in log if a key is pressed, which is assigned to other controller already 
+// TODO: Maybe add a script reference which is nothing but a manual and helper for trouble shooting. (similar to how every script is represented on top in inspector)
 
 [ExecuteInEditMode]
 public class VRInputSetup : MonoBehaviour
 {
+
+
     public enum Hand { Right, Left };
 
     public VRInputLookup vrInputLookup;
 
     [HideInInspector] public Hand Controller;
-    [HideInInspector] public VRController c
+    [HideInInspector]
+    public VRController c
     {
         get { return Controller == Hand.Left ? vrInputLookup.Left : vrInputLookup.Right; }
     }
@@ -57,6 +65,76 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector] public bool grabInverted = false;
 
 
+    [HideInInspector] public bool Button1Status;
+    [HideInInspector] public bool Button1_TouchStatus;
+
+    [HideInInspector] public bool Button2Status;
+    [HideInInspector] public bool Button2_TouchStatus;
+
+    [HideInInspector] public bool Index_TouchStatus;
+
+    [HideInInspector] public bool Thumb_TouchStatus;
+    [HideInInspector] public bool Thumb_PressStatus;
+
+    [HideInInspector] public bool ThumbXStatus;
+    [HideInInspector] public bool ThumbYStatus;
+
+    [HideInInspector] public bool IndexStatus;
+    [HideInInspector] public bool GrabStatus;
+
+
+    private void SetStatuses()
+    {
+        // Buttons
+        Button1_TouchStatus = ButtonIsPressed(button1_Touch) ? true : false;
+        Button1Status = ButtonIsPressed(button1) ? true : false;
+
+        Button2_TouchStatus = ButtonIsPressed(button2_Touch) ? true : false;
+        Button2Status = ButtonIsPressed(button2) ? true : false;
+
+        Index_TouchStatus = ButtonIsPressed(index_Touch) ? true : false;
+
+        Thumb_TouchStatus = ButtonIsPressed(thumb_Touch) ? true : false;
+        Thumb_PressStatus = ButtonIsPressed(thumb_Press) ? true : false;
+
+        // Axes
+        ThumbXStatus = AxisIsUsed(thumbX, thumbXInverted) ? true : false;
+        ThumbYStatus = AxisIsUsed(thumbY, thumbYInverted) ? true : false;
+
+        IndexStatus = AxisIsUsed(index, indexInverted) ? true : false;
+        GrabStatus = AxisIsUsed(grab, grabInverted) ? true : false;
+    }
+
+    bool ButtonIsPressed(int num)
+    {
+        if (num < 0) { return false; }
+
+        if (Input.GetKey(InputButton.JoystickFromInt(num)))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool AxisIsUsed(int num, bool inverted)
+    {
+        float min = 0.5f;
+
+        if (num < 0) { return false; }
+
+        string name = InputAxis.FromInt(num);
+
+        float input = Input.GetAxis(name);
+
+        if (input > min && !inverted) { return true; }
+        if (input < -min && inverted) { return true; }
+
+        return false;
+    }
+
+
     private void Awake()
     {
         KeysUsed = new List<int>();
@@ -89,7 +167,7 @@ public class VRInputSetup : MonoBehaviour
 
     public void AddButton(int num) // TODO: add similar function for axes
     {
-        if(num < 0) { return; }
+        if (num < 0) { return; }
 
         KeysUsed.Add(num);
     }
@@ -97,7 +175,7 @@ public class VRInputSetup : MonoBehaviour
     {
         string axisName = InputAxis.FromIntBool(num, inverted);
 
-        if(axisName != "")
+        if (axisName != "")
         {
             AxesUsed.Add(axisName);
         }
@@ -163,6 +241,8 @@ public class VRInputSetup : MonoBehaviour
 
     void Update()
     {
+        SetStatuses();
+
         for (int i = 1; i < 29; i++)
         {
             string axis = "Axis" + i;
@@ -201,5 +281,7 @@ public class VRInputSetup : MonoBehaviour
             }
         }
     }
+
+
 }
 

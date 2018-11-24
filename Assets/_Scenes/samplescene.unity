@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ef60fe953dbe44eb41d82a6ce500e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrInputLookup: {fileID: 11400000, guid: 4ad4e8fcf0918094bb138b312cca51d0, type: 2}
+  vrInputLookup: {fileID: 11400000, guid: 7f54a30b19d240e4f8abc0e29c25808f, type: 2}
   Controller: 1
   lastButtonPressed: 0
   lastAxisUsed: 
@@ -336,6 +336,17 @@ MonoBehaviour:
   indexInverted: 0
   grab: 11
   grabInverted: 0
+  Button1Status: 0
+  Button1_TouchStatus: 0
+  Button2Status: 0
+  Button2_TouchStatus: 0
+  Index_TouchStatus: 0
+  Thumb_TouchStatus: 0
+  Thumb_PressStatus: 0
+  ThumbXStatus: 0
+  ThumbYStatus: 0
+  IndexStatus: 0
+  GrabStatus: 0
 --- !u!4 &213062476 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4677891204690692, guid: 85dfab9623c67784fa7894de63cd1604,
