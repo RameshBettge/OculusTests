@@ -190,14 +190,12 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
-            if (AxisIsUnused(script.lastAxisUsed))
+            if (LastAxisIsUnused(InputAxis.FromIntBool(axisNum, inverted)))
             {
-                Debug.Log("Axis is re-assigned");
-
                 RemoveAxis(axisNum, inverted);
                 output.num = script.AxisToInt(script.lastAxisUsed);
                 output.inverted = script.lastAxisNegative;
-                script.AddAxis(output.num, output.inverted);
+                script.AddAxis(output.num, output.inverted, script.AxesUsedCurrent);
             }
         }
         if (GUILayout.Button("Reset"))
@@ -229,60 +227,106 @@ public class VRInputSetupInspector : Editor
     }
 
 
-    bool AxisIsUnused(string name)
+    bool LastAxisIsUnused(string current)
     {
+        string lastAxisUsed = script.lastAxisUsed;
+
         bool unused = true;
 
         bool originalIsInverted;
 
-        string[] parts = name.Split();
+        string[] parts = lastAxisUsed.Split();
 
         string invertedName;
         string normalName;
 
+        string oppositeName;
+
         if(parts.Length > 1) // if there is '(inverted)' before the axis name
         {
-            invertedName = name;
+            invertedName = lastAxisUsed;
             normalName = parts[1];
+
+            oppositeName = normalName;
 
             originalIsInverted = true;
         }
         else
         {
-            normalName = name;
-            invertedName = "(inverted) " + name;
+            normalName = lastAxisUsed;
+            invertedName = "(inverted) " + lastAxisUsed;
+
+            oppositeName = invertedName;
 
             originalIsInverted = false;
         }
 
-        if (script.AxesUsed.Contains(normalName))
+        if(current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
+
+        // TODO: Avoid having 12 if statements for creating specific error messages.
+
+        // Check current controller
+        if (script.AxesUsedCurrent.Contains(normalName))
         {
             if (originalIsInverted)
             {
                 unused = false;
-                Debug.LogError(name + " is already assigned in inverted variant.");
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller in inverted variant.");
             }
             else
             {
                 unused = false;
-                Debug.LogError(name + " is already assigned.");
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller.");
             }
         }
-        else if (script.AxesUsed.Contains(invertedName))
+        else if (script.AxesUsedCurrent.Contains(invertedName))
         {
             if (originalIsInverted)
             {
                 unused = false;
-                Debug.LogError(name + " is already assigned.");
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller.");
             }
             else
             {
                 unused = false;
-                Debug.LogError(name + " is already assigned in un-inverted variant.");
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller in un-inverted variant.");
             }
         }
 
-        Debug.Log(name + " is unused = " + unused);
+        // Check other controller
+        if (script.AxesUsedOther.Contains(normalName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller in inverted variant.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller.");
+            }
+        }
+        else if (script.AxesUsedCurrent.Contains(invertedName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller in un-inverted variant.");
+            }
+        }
+
+
+        if (unused)
+        {
+
+        }
+            
 
         return unused;
     }
@@ -338,9 +382,13 @@ public class VRInputSetupInspector : Editor
         if(num < 0) { return; }
         string name = InputAxis.FromIntBool(num, inverted);
 
-        if (script.AxesUsed.Contains(name))
+        if (script.AxesUsedCurrent.Contains(name))
         {
-            script.AxesUsed.Remove(name);
+            script.AxesUsedCurrent.Remove(name);
+        }
+        else if (script.AxesUsedOther.Contains(name))
+        {
+            script.AxesUsedOther.Remove(name);
         }
     }
 }

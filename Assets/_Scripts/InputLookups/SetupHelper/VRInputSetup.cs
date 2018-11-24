@@ -37,8 +37,10 @@ public class VRInputSetup : MonoBehaviour
     [HideInInspector]
     public bool lastAxisNegative;
 
-    //[HideInInspector]
-    public List<string> AxesUsed;
+    [HideInInspector]
+    public List<string> AxesUsedCurrent;
+    [HideInInspector]
+    public List<string> AxesUsedOther;
 
     [HideInInspector]
     public List<int> KeysUsedCurrent;
@@ -151,12 +153,13 @@ public class VRInputSetup : MonoBehaviour
     {
         KeysUsedCurrent = new List<int>();
         KeysUsedOther = new List<int>();
-        AxesUsed = new List<string>();
+        AxesUsedCurrent = new List<string>();
+        AxesUsedOther = new List<string>();
 
         currentController.WriteToSetup(this);
 
-        currentController.WriteIntoList(this, KeysUsedCurrent);
-        otherController.WriteIntoList(this, KeysUsedOther);
+        currentController.WriteIntoList(this, KeysUsedCurrent, AxesUsedCurrent);
+        otherController.WriteIntoList(this, KeysUsedOther, AxesUsedOther);
     }
 
     public void AddButton(int num, List<int> l)
@@ -165,13 +168,12 @@ public class VRInputSetup : MonoBehaviour
 
         l.Add(num);
     }
-    public void AddAxis(int num, bool inverted)
+    public void AddAxis(int num, bool inverted, List<string> l)
     {
         if (num < 0) { return; }
         string axisName = InputAxis.FromIntBool(num, inverted);
 
-        print("Added axis: " + axisName);
-        AxesUsed.Add(axisName);
+        l.Add(axisName);
     }
 
 
@@ -236,6 +238,11 @@ public class VRInputSetup : MonoBehaviour
     {
         SetStatuses();
 
+        SetLastInput();
+    }
+
+    void SetLastInput()
+    {
         for (int i = 1; i < 29; i++)
         {
             string axis = "Axis" + i;
@@ -243,11 +250,31 @@ public class VRInputSetup : MonoBehaviour
 
             if (v > 0.5f && v < 0.98f)
             {
+                string name = InputAxis.FromIntBool(i, false);
+
+                if (AxesUsedCurrent.Contains(name)) { return; }
+
+                if (AxesUsedOther.Contains(name))
+                {
+                    Debug.LogWarning("Warning: " + name + " is already assigned to the other Controller. It cannot appear as 'last Axis used!'");
+                    return;
+                }
+
                 lastAxisUsed = InputAxis.FromIntBool(i, false);
                 lastAxisNegative = false;
             }
             if (v < -0.5f && v > -0.98f)
             {
+                string name = InputAxis.FromIntBool(i, true);
+
+                if (AxesUsedCurrent.Contains(name)) { Debug.Log(name + " already assigned!");  return; }
+
+                if (AxesUsedOther.Contains(name))
+                {
+                    Debug.LogWarning(name + " is already assigned to the other Controller. It cannot appear as 'last Axis used!'");
+                    return;
+                }
+
                 lastAxisUsed = InputAxis.FromIntBool(i, true);
                 lastAxisNegative = true;
             }
@@ -265,7 +292,7 @@ public class VRInputSetup : MonoBehaviour
 
                 if (KeysUsedOther.Contains(i))
                 {
-                    Debug.LogWarning("The JoystickButton" + i + " is already used by the other Controller. It cannot appear as 'last Button pressed!'");
+                    Debug.LogWarning("The JoystickButton" + i + " is already assigned to the other Controller. It cannot appear as 'last Button pressed!'");
                     return;
                 }
 

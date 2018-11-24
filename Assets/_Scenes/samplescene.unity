@@ -289,7 +289,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62521740}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18f9a78caaf419c4586f018d6f9c2426, type: 3}
   m_Name: 
@@ -311,23 +311,28 @@ MonoBehaviour:
   lastButtonPressed: 0
   lastAxisUsed: 
   lastAxisNegative: 0
-  AxesUsed: []
-  KeysUsedCurrent: 000000000100000000000000
+  AxesUsedCurrent:
+  - Axis1
+  - (inverted) Axis2
+  - Axis9
+  - Axis10
+  AxesUsedOther: []
+  KeysUsedCurrent: 00000000010000000200000003000000050000000800000009000000
   KeysUsedOther: 
-  button1: -1
-  button1_Touch: 0
-  button2: -1
-  button2_Touch: 1
-  index_Touch: 0
-  thumb_Touch: -1
-  thumb_Press: -1
-  thumbX: -1
+  button1: 0
+  button1_Touch: 1
+  button2: 2
+  button2_Touch: 3
+  index_Touch: 5
+  thumb_Touch: 8
+  thumb_Press: 9
+  thumbX: 1
   thumbXInverted: 0
-  thumbY: -1
-  thumbYInverted: 0
-  index: -1
+  thumbY: 2
+  thumbYInverted: 1
+  index: 9
   indexInverted: 0
-  grab: -1
+  grab: 10
   grabInverted: 0
   Button1Status: 0
   Button1_TouchStatus: 0
