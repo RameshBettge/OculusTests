@@ -5,8 +5,7 @@ using UnityEditor;
 using System;
 
 // TODO: Automatically call CopyFromLookup and controllers.write to list when switching vrInputLookup. Maybe check in update.
-// TODO: Remind that one has to click in game window for input to be recognized.
-// TODO: Maybe add a script reference which is nothing but a manual and helper for trouble shooting. (similar to how every script is represented on top in inspector)
+// TODO: Make the user able to hide the Buttons- and Axes-sections respectively.
 
 [ExecuteInEditMode]
 public class VRInputSetup : MonoBehaviour
@@ -266,7 +265,7 @@ public class VRInputSetup : MonoBehaviour
             {
                 string name = InputAxis.FromIntBool(i, true);
 
-                if (AxesUsedCurrent.Contains(name)) { Debug.Log(name + " already assigned!"); return; }
+                if (AxesUsedCurrent.Contains(name)) { return; }
 
                 if (AxesUsedOther.Contains(name))
                 {
@@ -377,8 +376,6 @@ public class VRInputSetup : MonoBehaviour
     public void AskForSwitch()
     {
         int response = EditorUtility.DisplayDialogComplex("Switching Controller ...", "Please apply your changes before switching", "Apply Settings", "Discard Settings", "Cancel");
-
-        print(response);
 
         if (response == 0)
         {

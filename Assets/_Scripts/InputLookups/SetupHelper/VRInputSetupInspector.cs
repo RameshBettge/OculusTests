@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-// TODO: Make last applied un-changeable
-
 [ExecuteInEditMode]
 [CustomEditor(typeof(VRInputSetup))]
 public class VRInputSetupInspector : Editor
@@ -20,6 +18,9 @@ public class VRInputSetupInspector : Editor
     GUIStyle setStyle = new GUIStyle();
     GUIStyle errorStyle = new GUIStyle();
     GUIStyle unassignedStyle = new GUIStyle();
+    GUIStyle controllerStyle = new GUIStyle();
+
+    GUIStyle header = new GUIStyle();
 
 
     int LastButton { get { return script.lastButtonPressed; } }
@@ -41,66 +42,62 @@ public class VRInputSetupInspector : Editor
         unassignedStyle.normal.textColor = new Color(lightness, lightness, lightness);
         unassignedStyle.fontStyle = FontStyle.Italic;
 
+        header.fontSize = 16;
+        header.fontStyle = FontStyle.Bold;
 
-
+        controllerStyle.fontSize = 12;
+        controllerStyle.normal.textColor = new Color(lightness, lightness, lightness);
+        controllerStyle.fontStyle = FontStyle.Bold;
 
         GUI.enabled = false;
         EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
         GUI.enabled = true;
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("About this script", GUILayout.Height(30)))
+        if (GUILayout.Button("About this script", GUILayout.Height(25)))
         {
             script.DisplayAbout();
         }
 
         Color bColor = GUI.backgroundColor;
         GUI.backgroundColor = new Color(0.5f, 1, 0.5f, 1);
-        if (GUILayout.Button("Display Manual", GUILayout.Height(30)))
+        if (GUILayout.Button("Display Manual", GUILayout.Height(25)))
         {
             script.DisplayManual();
         }
         GUI.backgroundColor = bColor;
         GUILayout.EndHorizontal();
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        AddSpace(3);
 
 
         SerializedObject so = base.serializedObject;
         EditorGUILayout.PropertyField(so.FindProperty("vrInputLookup"), true);
         so.ApplyModifiedProperties();
 
+        AddSpace(3);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-
+        
         // Choose controller for setup
-        if (GUILayout.Button("Switch Controller to SetUp", GUILayout.Height(30)))
+        if (GUILayout.Button("Switch Controller to Set Up", GUILayout.Height(25)))
         {
 
             script.AskForSwitch();
         }
 
-        EditorGUILayout.LabelField("Current Controller: " + HandStatus(), EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Current Controller: " + HandStatus(), controllerStyle);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-
-        GUI.backgroundColor = Color.yellow;
-        if (GUILayout.Button("Apply", GUILayout.Height(50)))
-        {
-            script.ApplySettings(true);
-        }
-        GUI.backgroundColor = bColor;
+        
 
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        AddSpace(3);
 
         script = (VRInputSetup)base.target;
 
         // ------------------------ Buttons
+        EditorGUILayout.LabelField("Buttons", header);
+
+        AddSpace(2);
 
         script.button1_Touch = DrawButtonInfo("Button1_Touch", script.button1_Touch, script.Button1_TouchStatus);
         script.button2_Touch = DrawButtonInfo("Button2_Touch", script.button2_Touch, script.Button2_TouchStatus);
@@ -115,13 +112,14 @@ public class VRInputSetupInspector : Editor
 
         EditorGUILayout.LabelField("Last Button Pressed: " + script.lastButtonPressed.ToString(), EditorStyles.boldLabel);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        AddSpace(6);
+
 
         //  ------------------------------- Axes
 
-        EditorGUILayout.LabelField("Axes", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Axes", header);
+
+        AddSpace(2);
 
         AxisParameters info = DrawAxisInfo("ThumbX", script.thumbX, script.thumbXInverted, script.ThumbXStatus);
         script.thumbX = info.num;
@@ -139,17 +137,19 @@ public class VRInputSetupInspector : Editor
         script.grab = info.num;
         script.grabInverted = info.inverted;
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Last Axis used: " + script.lastAxisUsed, EditorStyles.boldLabel);
+
+        AddSpace(3);
 
 
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.LabelField("Last Axis used: ", EditorStyles.boldLabel);
-        EditorGUILayout.TextField(script.lastAxisUsed);
-        EditorGUI.EndDisabledGroup();
+        GUI.backgroundColor = Color.yellow;
+        if (GUILayout.Button("Apply Settings", GUILayout.Height(50)))
+        {
+            script.ApplySettings(true);
+        }
+        GUI.backgroundColor = bColor;
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        AddSpace(3);
     }
 
     // ----------------------------- Methods
@@ -202,7 +202,7 @@ public class VRInputSetupInspector : Editor
         if (GUILayout.Button("Set"))
         {
 
-            if (LastAxisIsUnused(InputAxis.FromIntBool(axisNum, inverted)))
+            if (LastAxisIsUnused(axisNum, inverted))
             {
                 RemoveAxis(axisNum, inverted);
                 output.num = script.AxisToInt(script.lastAxisUsed);
@@ -238,7 +238,7 @@ public class VRInputSetupInspector : Editor
     }
 
 
-    bool LastAxisIsUnused(string current)
+    bool LastAxisIsUnused(int num, bool inverted)
     {
         string lastAxisUsed = script.lastAxisUsed;
 
@@ -272,7 +272,11 @@ public class VRInputSetupInspector : Editor
             originalIsInverted = false;
         }
 
-        if (current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
+        if (num > -1)
+        {
+            string current = InputAxis.FromIntBool(num, inverted);
+            if (current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
+        }
 
         // TODO: Avoid having 12 if statements for creating specific error messages.
 
@@ -331,13 +335,6 @@ public class VRInputSetupInspector : Editor
                 Debug.LogError(lastAxisUsed + " is already assigned to other Controller in un-inverted variant.");
             }
         }
-
-
-        if (unused)
-        {
-
-        }
-
 
         return unused;
     }
@@ -421,6 +418,14 @@ public class VRInputSetupInspector : Editor
         else if (script.AxesUsedOther.Contains(name))
         {
             script.AxesUsedOther.Remove(name);
+        }
+    }
+
+    void AddSpace(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            EditorGUILayout.Space();
         }
     }
 }
