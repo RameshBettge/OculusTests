@@ -306,6 +306,11 @@ public class VRInputSetup : MonoBehaviour
             "     ------         General         ------     " +
             "\n" +
             "\n" +
+            "First assign the VRInputLookup you want to fill.\n" +
+            "To create a new one:\n" +
+            "Right-click in Project-folder -> Create -> Lookups -> VRInput" +
+            "\n" +
+            "\n" +
             "Press a JoystickButton and it will be assigned to 'Last Button Pressed', unless it already has been assigned.\n" +
             "\n" +
             "Press 'Set' below a button, to assign the 'Last Button Pressed' to it.\n" +
@@ -314,8 +319,9 @@ public class VRInputSetup : MonoBehaviour
             "\n" +
             "After assigning all Buttons and Axes on one Controller, click on apply and then on 'Switch Controller' to set up the other Controller.\n" +
             "\n" +
-            "WARNING:\n" +
-            "If the 'Apply' button is not pressed before switching controllers or closing the scene, your changes will be void!\n" +
+            "\n" +
+            "             IMPORTANT WARNING:\n" +
+            "If the 'Apply' button is not pressed before switching controllers or closing the scene, your changes will be lost!\n" +
             "\n" +
             "\n" +
             "     ------     Button specific     ------     " +
@@ -345,7 +351,68 @@ public class VRInputSetup : MonoBehaviour
 
 
         EditorUtility.DisplayDialog("How to use the VRInputSetup", message, "Close");
-
     }
+
+    public void DisplayAbout()
+    {
+        string message =
+            "A VRInputLookup can be used to get input from VR Controllers very easily and comfortably.\n" +
+            "\n" +
+            "For each Headset your game should support, you can create a VRInputLookup. To quickly fill it, this script (VRInputLookupSetup.cs) can be used.";
+
+        if(EditorUtility.DisplayDialog("About VRInputSetup", message, "Display Manual", "Close"))
+        {
+            DisplayManual();
+        }
+    }
+
+    public string HandStatus()
+    {
+        return Controller == Hand.Left ? "Left" : "Right";
+    }
+
+    //public void AskForSwitch()
+    //{
+
+    //    if (Controller == Hand.Left) { Controller = Hand.Right; }
+    //    else if (Controller == Hand.Right) { Controller = Hand.Left; }
+
+    //    int response = EditorUtility.DisplayDialogComplex("Switching Controller ...", "Please apply your changes before switching", "Apply Settings", "Discard Settings" , "Cancel");
+
+    //    if (response == 0)
+    //    {
+    //        ApplySettings();
+    //    }
+    //    else if(response == 1)
+    //    {
+    //        DisplayManual();
+    //    CopyFromLookup();
+    //    }
+
+
+    //    Debug.LogWarning("Switched to " + HandStatus() + " controller.");
+    //}
+
+    //public void ApplySettings()
+    //{
+    //    if (vrInputLookup == null)
+    //    {
+    //        Debug.LogError("No Lookup assigned!");
+    //        return;
+    //    }
+
+    //    VRController controller = Controller == VRInputSetup.Hand.Left ? vrInputLookup.Left : vrInputLookup.Right;
+    //    controller.CopyFromSetup(this);
+    //    vrInputLookup.UpdateLastApplied();
+
+    //    string hand = HandStatus();
+
+    //    Debug.LogWarning(hand + " controller's settings applied.");
+    //}
+
+    //public void ChangeHands()
+    //{
+
+    //}
 }
 

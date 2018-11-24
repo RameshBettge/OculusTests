@@ -35,16 +35,17 @@ public class VRInputSetupInspector : Editor
         selectedKeyStyle.normal.textColor = Color.red;
         selectedKeyStyle.fontStyle = FontStyle.Bold;
 
-        // The next 6 lines of code have caused a crash before. If it happens again, delete them and call DrawDefaultInspector() instead.
         GUI.enabled = false;
         EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
         GUI.enabled = true;
 
-        SerializedObject so = base.serializedObject;
-        EditorGUILayout.PropertyField(so.FindProperty("vrInputLookup"), true);
-        so.ApplyModifiedProperties();
-
         EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object).", MessageType.Info, true);
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("About this script", GUILayout.Height(30)))
+        {
+            script.DisplayAbout();
+        }
 
         Color bColor = GUI.backgroundColor;
         GUI.backgroundColor = new Color(0.5f, 1, 0.5f, 1);
@@ -53,16 +54,25 @@ public class VRInputSetupInspector : Editor
             script.DisplayManual();
         }
         GUI.backgroundColor = bColor;
+        GUILayout.EndHorizontal();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
 
 
+        SerializedObject so = base.serializedObject;
+        EditorGUILayout.PropertyField(so.FindProperty("vrInputLookup"), true);
+        so.ApplyModifiedProperties();
 
-            EditorGUILayout.Space();
+
+        EditorGUILayout.Space();
         EditorGUILayout.Space();
 
         // Choose controller for setup
         EditorGUILayout.HelpBox("WARNING: Settings are void if they are not applied. Please apply first and only then switch Controllers.", MessageType.Warning, true);
         if (GUILayout.Button("Switch Controller to SetUp", GUILayout.Height(30)))
         {
+
             if (script.Controller == VRInputSetup.Hand.Left) { script.Controller = VRInputSetup.Hand.Right; }
             else if (script.Controller == VRInputSetup.Hand.Right) { script.Controller = VRInputSetup.Hand.Left; }
             script.CopyFromLookup();
@@ -130,7 +140,6 @@ public class VRInputSetupInspector : Editor
         //  ------------------------------- Axes
 
         EditorGUILayout.LabelField("Axes", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("An Axis will be recognized best if it is NOT exactly 1 or -1. If axis is a joystick always move it either right or up!", MessageType.Warning, true);
 
         AxisParameters info = DrawAxisInfo("ThumbX", script.thumbX, script.thumbXInverted, script.ThumbXStatus);
         script.thumbX = info.num;
@@ -159,8 +168,6 @@ public class VRInputSetupInspector : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
-
-        EditorGUILayout.HelpBox("Please remember to apply your settings!", MessageType.Warning, true);
     }
 
     // ----------------------------- Methods
@@ -212,6 +219,7 @@ public class VRInputSetupInspector : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set"))
         {
+            
             if (LastAxisIsUnused(InputAxis.FromIntBool(axisNum, inverted)))
             {
                 RemoveAxis(axisNum, inverted);
@@ -330,7 +338,7 @@ public class VRInputSetupInspector : Editor
                 Debug.LogError(lastAxisUsed + " is already assigned to other Controller.");
             }
         }
-        else if (script.AxesUsedCurrent.Contains(invertedName))
+        else if (script.AxesUsedOther.Contains(invertedName))
         {
             if (originalIsInverted)
             {
