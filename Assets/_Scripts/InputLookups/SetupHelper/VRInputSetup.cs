@@ -21,9 +21,13 @@ public class VRInputSetup : MonoBehaviour
 
     [HideInInspector] public Hand Controller;
     [HideInInspector]
-    public VRController c
+    public VRController currentController
     {
         get { return Controller == Hand.Left ? vrInputLookup.Left : vrInputLookup.Right; }
+    }
+    public VRController otherController
+    {
+        get { return Controller == Hand.Left ? vrInputLookup.Right : vrInputLookup.Left; }
     }
 
     [HideInInspector]
@@ -35,8 +39,11 @@ public class VRInputSetup : MonoBehaviour
 
     [HideInInspector]
     public List<string> AxesUsed;
+
     [HideInInspector]
-    public List<int> KeysUsed;
+    public List<int> KeysUsedCurrent;
+    [HideInInspector]
+    public List<int> KeysUsedOther;
 
 
     // saved buttons
@@ -137,48 +144,34 @@ public class VRInputSetup : MonoBehaviour
 
     private void Awake()
     {
-        KeysUsed = new List<int>();
-        AxesUsed = new List<string>();
-
         CopyFromLookup();
-
-        //AddControllerKeys(vrInputLookup.Right);
-        //AddControllerKeys(vrInputLookup.Left);
     }
 
     public void CopyFromLookup()
     {
-        c.WriteToSetup(this);
+        KeysUsedCurrent = new List<int>();
+        KeysUsedOther = new List<int>();
+        AxesUsed = new List<string>();
 
-        vrInputLookup.Right.WriteIntoList(this);
-        vrInputLookup.Left.WriteIntoList(this);
+        currentController.WriteToSetup(this);
+
+        currentController.WriteIntoList(this, KeysUsedCurrent);
+        otherController.WriteIntoList(this, KeysUsedOther);
     }
 
-    //void AddControllerKeys(VRController c) //may be obsolete because this is done in CopyfromLookup
-    //{
-    //    AddKeyInt(button1);
-    //    AddKeyInt(button1_Touch);
-    //    AddKeyInt(button2);
-    //    AddKeyInt(button2_Touch);
-    //    AddKeyInt(index_Touch);
-    //    AddKeyInt(thumb_Touch);
-    //    AddKeyInt(thumb_Press);
-    //}
-
-    public void AddButton(int num) // TODO: add similar function for axes
+    public void AddButton(int num, List<int> l)
     {
         if (num < 0) { return; }
 
-        KeysUsed.Add(num);
+        l.Add(num);
     }
     public void AddAxis(int num, bool inverted)
     {
+        if (num < 0) { return; }
         string axisName = InputAxis.FromIntBool(num, inverted);
 
-        if (axisName != "")
-        {
-            AxesUsed.Add(axisName);
-        }
+
+        AxesUsed.Add(axisName);
     }
 
 
@@ -260,22 +253,21 @@ public class VRInputSetup : MonoBehaviour
             }
         }
 
-        //foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
-        //{
-        //    int num;
-        //    if(!KeyCodeToInt(key, out num)) { return; }
-        //    if (Input.GetKeyDown(key) && !KeysUsed.Contains(num))
-        //    {
-        //        lastButtonPressed = num;
-        //    }
-        //}
         for (int i = 0; i < 20; i++) // Checks only the main joystick buttons
         {
             string name = "JoystickButton" + i;
 
             KeyCode key = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
-            if (Input.GetKeyDown(key) && !KeysUsed.Contains(i))
+
+            if (Input.GetKeyDown(key))
             {
+                if (KeysUsedCurrent.Contains(i)) { return; }
+
+                if (KeysUsedOther.Contains(i))
+                {
+                    Debug.LogWarning("The JoystickButton" + i + " is already used by the other Controller. It cannot appear as 'last Button pressed!'");
+                    return;
+                }
 
                 lastButtonPressed = i;
             }

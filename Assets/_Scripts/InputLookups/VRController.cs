@@ -1,6 +1,6 @@
 ﻿
 using UnityEngine;
-using UnityEditor;
+using System.Collections.Generic;
 
 // TODO: Make sure the variables reflect the actual state even when set by VRInputSetup.cs!
 [ExecuteInEditMode]
@@ -125,16 +125,16 @@ public class VRController
         s.grabInverted = grabInverted;
     }
 
-    public void WriteIntoList(VRInputSetup s)
+    public void WriteIntoList(VRInputSetup s, List<int> l)
     {
         //UsedKeys
-        s.AddButton(button1);
-        s.AddButton(button1_Touch);
-        s.AddButton(button2);
-        s.AddButton(button2_Touch);
-        s.AddButton(index_Touch);
-        s.AddButton(thumb_Touch);
-        s.AddButton(thumb_Press);
+        s.AddButton(button1, l);
+        s.AddButton(button1_Touch, l);
+        s.AddButton(button2, l);
+        s.AddButton(button2_Touch, l);
+        s.AddButton(index_Touch, l);
+        s.AddButton(thumb_Touch, l);
+        s.AddButton(thumb_Press, l);
 
         //UsedAxes
         s.AddAxis(thumbX, thumbXInverted);

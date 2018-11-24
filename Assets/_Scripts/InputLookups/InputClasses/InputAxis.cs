@@ -35,7 +35,7 @@ public class InputAxis
     {
         if (num < 0)
         {
-            Debug.Log("Axis" + num + " does not exist!");
+            Debug.LogError("Axis" + num + " does not exist!");
             return "";
         }
 
@@ -46,7 +46,7 @@ public class InputAxis
     {
         if (num < 0)
         {
-            Debug.Log("Axis" + num + " does not exist!");
+            Debug.LogError("Axis" + num + " does not exist!");
             return "";
         }
 

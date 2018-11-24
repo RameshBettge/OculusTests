@@ -13,7 +13,7 @@ public class VRInputSetupInspector : Editor
     {
         get
         {
-            return script.c;
+            return script.currentController;
         }
     }
 
@@ -477,14 +477,18 @@ public class VRInputSetupInspector : Editor
 
     bool ButtonIsUnused(int keyNum)
     {
-        bool unused = !script.KeysUsed.Contains(keyNum);
-        if (unused) { script.KeysUsed.Add(keyNum); }
-        else
+        if (script.KeysUsedCurrent.Contains(keyNum))
         {
-            Debug.LogError("JoystickButton" + keyNum + " is already used!");
+            Debug.LogError("JoystickButton" + keyNum + " is already used by this Controller!");
+            return false;
+        }
+        if (script.KeysUsedOther.Contains(keyNum))
+        {
+            Debug.LogError("JoystickButton" + keyNum + " is already used by the other Controller!");
+            return false;
         }
 
-        return unused;
+        return true;
     }
 
 
@@ -507,9 +511,13 @@ public class VRInputSetupInspector : Editor
 
     void RemoveKey(int num)
     {
-        if (script.KeysUsed.Contains(num))
+        if (script.KeysUsedCurrent.Contains(num))
         {
-            script.KeysUsed.Remove(num);
+            script.KeysUsedCurrent.Remove(num);
+        }
+        else if (script.KeysUsedOther.Contains(num))
+        {
+            script.KeysUsedOther.Remove(num);
         }
     }
 
