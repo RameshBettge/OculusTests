@@ -7,7 +7,6 @@ using UnityEditor;
 
 public class ReflectionUser : MonoBehaviour
 {
-
     public ReflectionSource source = new ReflectionSource();
     public FieldInfo[] fields;
     public PropertyInfo[] properties;
