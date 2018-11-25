@@ -8,6 +8,9 @@ public abstract class ReflectionInputLookup : ScriptableObject
 {
     public List<KeyCode> usedKeys = new List<KeyCode>();
 
+    [HideInInspector]
+    public bool DisplayDefault = true;
+
     public void AddToList(KeyCode kC)
     {
         usedKeys.Add(kC);
@@ -25,19 +28,34 @@ public abstract class ReflectionInputLookup : ScriptableObject
 
 
 [ExecuteInEditMode]
-[CustomEditor(typeof(ReflectionInputLookup))]
-public class ReflectionInputLookupInspector<T> : Editor where T : ReflectionInputLookup
+[CustomEditor(typeof(ReflectionInputLookup), true)]
+public class ReflectionInputLookupInspector : Editor
 {
     public ReflectionSource source = new ReflectionSource();
     public FieldInfo[] fields;
 
-    T script;
+    ReflectionInputLookup script;
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        script = (ReflectionInputLookup)target;
 
-        script = (T)target;
+        script.DisplayDefault = EditorGUILayout.Toggle("Display Default Inspector", script.DisplayDefault);
+
+        if (script.DisplayDefault)
+        {
+            DrawDefaultInspector();
+        }
+        else
+        {
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Script:", MonoScript.FromScriptableObject((ReflectionInputLookup) target), typeof(ReflectionInputLookup), false);
+            GUI.enabled = true;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+        }
+
 
         SetFieldsAndProperties();
     }
@@ -51,7 +69,7 @@ public class ReflectionInputLookupInspector<T> : Editor where T : ReflectionInpu
         FieldInfo[] fields = script.GetType().GetFields(flags);
         foreach (FieldInfo fieldInfo in fields)
         {
-            if(fieldInfo.FieldType == typeof(List<KeyCode>)) { return; } // Don't display the list
+            if (fieldInfo.FieldType == typeof(List<KeyCode>)) { return; } // Don't display the list
 
             EditorGUILayout.LabelField("Field: " + fieldInfo.FieldType + " " + fieldInfo.Name);
             //if(fieldInfo.FieldType == System.Type.GetType("Int32"))
