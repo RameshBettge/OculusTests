@@ -7,36 +7,34 @@ using UnityEditor;
 
 public class ReflectionUser : MonoBehaviour
 {
-    ReflectionSource source = new ReflectionSource();
+
+    public ReflectionSource source = new ReflectionSource();
     public FieldInfo[] fields;
     public PropertyInfo[] properties;
 
-    public List<string> infos = new List<string>();
+    //private void Awake()
+    //{
+    //    SetFieldsAndProperties();
+    //}
 
+    //public void SetFieldsAndProperties()
+    //{
+    //    infos = new List<string>();
 
-    private void Awake()
-    {
-        SetFieldsAndProperties();
-    }
+    //    const BindingFlags flags = BindingFlags.Public |
+    // BindingFlags.Instance | BindingFlags.Static;
 
-    public void SetFieldsAndProperties()
-    {
-        infos = new List<string>();
-
-        const BindingFlags flags = BindingFlags.Public |
-     BindingFlags.Instance | BindingFlags.Static;
-
-        FieldInfo[] fields = source.GetType().GetFields(flags);
-        foreach (FieldInfo fieldInfo in fields)
-        {
-            infos.Add("Field: " + fieldInfo.FieldType + " " + fieldInfo.Name);
-        }
-        PropertyInfo[] properties = source.GetType().GetProperties(flags);
-        foreach (PropertyInfo propertyInfo in properties)
-        {
-            infos.Add("Property: " + propertyInfo.PropertyType + " " + propertyInfo.Name);
-        }
-    }
+    //    FieldInfo[] fields = source.GetType().GetFields(flags);
+    //    foreach (FieldInfo fieldInfo in fields)
+    //    {
+    //        infos.Add("Field: " + fieldInfo.FieldType + " " + fieldInfo.Name);
+    //    }
+    //    PropertyInfo[] properties = source.GetType().GetProperties(flags);
+    //    foreach (PropertyInfo propertyInfo in properties)
+    //    {
+    //        infos.Add("Property: " + propertyInfo.PropertyType + " " + propertyInfo.Name);
+    //    }
+    //}
 
 }
 
@@ -45,7 +43,8 @@ public class ReflectionUser : MonoBehaviour
 [CustomEditor(typeof(ReflectionUser))]
 public class ReflectionUserInspector : Editor
 {
-
+    public ReflectionSource source = new ReflectionSource();
+    public FieldInfo[] fields;
 
     ReflectionUser script;
 
@@ -53,30 +52,49 @@ public class ReflectionUserInspector : Editor
     {
         script = (ReflectionUser)target;
 
-        script.SetFieldsAndProperties();
+        SetFieldsAndProperties();
 
-        foreach (string s in script.infos)
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        int inspectorFloat = EditorGUILayout.IntField(0);
+        if (inspectorFloat != 0)
         {
-            EditorGUILayout.LabelField(s);
+            Debug.Log("InspectorFloat set to: " + inspectorFloat);
         }
 
+    }
 
-        //if (script.fields != null)
-        //{
+    public void SetFieldsAndProperties()
+    {
+        DrawDefaultInspector();
 
-        //    foreach (FieldInfo fieldInfo in script.fields)
-        //    {
-        //        EditorGUILayout.LabelField(fieldInfo.FieldType + " " + "Field: " + fieldInfo.Name);
+        if (script.source == null) { return; }
 
-        //    }
-        //}
+        const BindingFlags flags = BindingFlags.Public |
+              BindingFlags.Instance | BindingFlags.Static;
 
-        //if (script.properties != null)
-        //{
-        //    foreach (PropertyInfo propertyInfo in script.properties)
-        //    {
-        //        EditorGUILayout.LabelField(propertyInfo.PropertyType + " Property: " + propertyInfo.Name);
-        //    }
-        //}
+        FieldInfo[] fields = source.GetType().GetFields(flags);
+        foreach (FieldInfo fieldInfo in fields)
+        {
+            EditorGUILayout.LabelField("Field: " + fieldInfo.FieldType + " " + fieldInfo.Name);
+            //if(fieldInfo.FieldType == System.Type.GetType("Int32"))
+            if (fieldInfo.FieldType == typeof(System.Int32))
+            {
+                EditorGUILayout.LabelField(fieldInfo.Name + " Value:");
+                int inspectorFloat = EditorGUILayout.IntField((int)fieldInfo.GetValue(script.source));
+                if (inspectorFloat != 0)
+                {
+                    fieldInfo.SetValue(script.source, inspectorFloat);
+                }
+                EditorGUILayout.Space();
+
+            }
+            else if (fieldInfo.FieldType == typeof(Reference))
+            {
+                EditorGUILayout.LabelField("IS REFERENCE!");
+
+            }
+        }
     }
 }
