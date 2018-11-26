@@ -306,19 +306,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ef60fe953dbe44eb41d82a6ce500e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   vrInputLookup: {fileID: 11400000, guid: 4ad4e8fcf0918094bb138b312cca51d0, type: 2}
   Controller: 0
+=======
+  vrInputLookup: {fileID: 11400000, guid: 3b44e0adc58da864b9980cce4146339c, type: 2}
+  Controller: 1
+>>>>>>> 3370425e46327be775c27411f92cbdd4a8a1f56c
   lastButtonPressed: 0
   lastAxisUsed: 
   lastAxisNegative: 0
-  AxesUsed:
-  - Axis4
-  - (inverted) Axis5
-  - Axis10
-  - Axis12
+  AxesUsedCurrent:
   - Axis1
   - (inverted) Axis2
   - Axis9
+<<<<<<< HEAD
   - Axis11
   KeysUsed: 000000000a000000010000000b0000000f0000001100000009000000020000000c000000030000000d0000000e0000001000000008000000
   button1: 0
@@ -329,13 +331,42 @@ MonoBehaviour:
   thumb_Touch: 17
   thumb_Press: 9
   thumbX: 4
+=======
+  - Axis10
+  AxesUsedOther: []
+  KeysUsedCurrent: 00000000010000000200000003000000050000000800000009000000
+  KeysUsedOther: 
+  button1: 0
+  button1_Touch: 1
+  button2: 2
+  button2_Touch: 3
+  index_Touch: 5
+  thumb_Touch: 8
+  thumb_Press: 9
+  thumbX: 1
+>>>>>>> 3370425e46327be775c27411f92cbdd4a8a1f56c
   thumbXInverted: 0
   thumbY: 5
   thumbYInverted: 1
   index: 10
   indexInverted: 0
+<<<<<<< HEAD
   grab: 12
+=======
+  grab: 10
+>>>>>>> 3370425e46327be775c27411f92cbdd4a8a1f56c
   grabInverted: 0
+  Button1Status: 0
+  Button1_TouchStatus: 0
+  Button2Status: 0
+  Button2_TouchStatus: 0
+  Index_TouchStatus: 0
+  Thumb_TouchStatus: 0
+  Thumb_PressStatus: 0
+  ThumbXStatus: 0
+  ThumbYStatus: 0
+  IndexStatus: 0
+  GrabStatus: 0
 --- !u!4 &213062476 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4677891204690692, guid: 85dfab9623c67784fa7894de63cd1604,

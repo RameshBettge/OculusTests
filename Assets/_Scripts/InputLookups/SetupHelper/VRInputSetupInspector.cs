@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-// TODO: Make last applied un-changeable
-
 [ExecuteInEditMode]
 [CustomEditor(typeof(VRInputSetup))]
 public class VRInputSetupInspector : Editor
@@ -13,354 +11,225 @@ public class VRInputSetupInspector : Editor
     {
         get
         {
-            return script.c;
+            return script.currentController;
         }
     }
+
+    GUIStyle setStyle = new GUIStyle();
+    GUIStyle errorStyle = new GUIStyle();
+    GUIStyle unassignedStyle = new GUIStyle();
+    GUIStyle controllerStyle = new GUIStyle();
+
+    GUIStyle header = new GUIStyle();
+
 
     int LastButton { get { return script.lastButtonPressed; } }
 
     VRInputSetup script;
 
-
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.HelpBox("This script is used to assign button inputs to a VRInputSetup(Scriptable Object). " +
-            "Click the button next to a variable to assign the last pressed button/ the last used axis to it. " +
-            "Only usable in Play-Mode.", MessageType.Info, true);
-        DrawDefaultInspector();
+        errorStyle.fontSize = 12;
+        float lightness = 0.35f;
+        setStyle.normal.textColor = new Color(lightness, lightness, lightness);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        errorStyle.fontSize = 12;
+        errorStyle.normal.textColor = Color.red;
+        errorStyle.fontStyle = FontStyle.Bold;
 
+        unassignedStyle.fontSize = 10;
+        unassignedStyle.normal.textColor = Color.yellow;
+        unassignedStyle.normal.textColor = new Color(lightness, lightness, lightness);
+        unassignedStyle.fontStyle = FontStyle.Italic;
+
+        header.fontSize = 16;
+        header.fontStyle = FontStyle.Bold;
+
+        controllerStyle.fontSize = 12;
+        controllerStyle.normal.textColor = new Color(lightness, lightness, lightness);
+        controllerStyle.fontStyle = FontStyle.Bold;
+
+        GUI.enabled = false;
+        EditorGUILayout.ObjectField("Script:", MonoScript.FromMonoBehaviour((VRInputSetup)target), typeof(VRInputSetup), false);
+        GUI.enabled = true;
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("About this script", GUILayout.Height(25)))
+        {
+            script.DisplayAbout();
+        }
+
+        Color bColor = GUI.backgroundColor;
+        GUI.backgroundColor = new Color(0.5f, 1, 0.5f, 1);
+        if (GUILayout.Button("Display Manual", GUILayout.Height(25)))
+        {
+            script.DisplayManual();
+        }
+        GUI.backgroundColor = bColor;
+        GUILayout.EndHorizontal();
+
+        AddSpace(3);
+
+
+        SerializedObject so = base.serializedObject;
+        EditorGUILayout.PropertyField(so.FindProperty("vrInputLookup"), true);
+        so.ApplyModifiedProperties();
+
+        AddSpace(3);
+
+        
         // Choose controller for setup
-        EditorGUILayout.HelpBox("WARNING: Settings are void if they are not applied. Please apply first and only then switch Controllers.", MessageType.Warning, true);
-        if (GUILayout.Button("Switch Controller to SetUp", GUILayout.Height(30)))
+        if (GUILayout.Button("Switch Controller to Set Up", GUILayout.Height(25)))
         {
-            if (script.Controller == VRInputSetup.Hand.Left) { script.Controller = VRInputSetup.Hand.Right; }
-            else if (script.Controller == VRInputSetup.Hand.Right) { script.Controller = VRInputSetup.Hand.Left; }
-            script.CopyFromLookup();
 
-
-            Debug.LogWarning("Switched to " + HandStatus() + " controller.");
+            script.AskForSwitch();
         }
 
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField("Current Controller: " + HandStatus());
-        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("Current Controller: " + HandStatus(), controllerStyle);
 
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        
 
 
-        if (GUILayout.Button("Apply", GUILayout.Height(50)))
-        {
-            if (script.vrInputLookup == null)
-            {
-                Debug.LogError("No Lookup assigned!");
-                return;
-            }
-
-            VRController controller = script.Controller == VRInputSetup.Hand.Left ? script.vrInputLookup.Left : script.vrInputLookup.Right;
-            controller.CopyFromSetup(script);
-            script.vrInputLookup.UpdateLastApplied();
-
-            string hand = HandStatus();
-
-            Debug.LogWarning(hand + " controller's settings applied. Please remember to set up the other controller as well!");
-        }
-
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
+        AddSpace(3);
 
         script = (VRInputSetup)base.target;
 
         // ------------------------ Buttons
-        #region Buttons
+        EditorGUILayout.LabelField("Buttons", header);
 
-        EditorGUILayout.LabelField("Buttons", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("Be sure to ALWAYS assign 'touched' buttons first!", MessageType.Warning, true);
+        AddSpace(2);
 
+        script.button1_Touch = DrawButtonInfo("Button1_Touch", script.button1_Touch, script.Button1_TouchStatus);
+        script.button2_Touch = DrawButtonInfo("Button2_Touch", script.button2_Touch, script.Button2_TouchStatus);
 
-        EditorGUILayout.LabelField("Button1_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button1_Touch);
-                script.button1_Touch = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button1_Touch);
-            script.button1_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.button1_Touch));
-        EditorGUI.EndDisabledGroup();
+        script.index_Touch = DrawButtonInfo("Index_Touch", script.index_Touch, script.Index_TouchStatus);
+        script.thumb_Touch = DrawButtonInfo("Thumb_Touch", script.thumb_Touch, script.Thumb_TouchStatus);
 
-        EditorGUILayout.Space();
+        script.button1 = DrawButtonInfo("Button1", script.button1, script.Button1Status);
+        script.button2 = DrawButtonInfo("Button2", script.button2, script.Button2Status);
 
-        EditorGUILayout.LabelField("Button2_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button2_Touch);
-                script.button2_Touch = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button2_Touch);
-            script.button2_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.button2_Touch));
-        EditorGUI.EndDisabledGroup();
+        script.thumb_Press = DrawButtonInfo("Thumb_Press", script.thumb_Press, script.Thumb_PressStatus);
 
-        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Last Button Pressed: " + script.lastButtonPressed.ToString(), EditorStyles.boldLabel);
 
-        EditorGUILayout.LabelField("Index_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.index_Touch);
-                script.index_Touch = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.index_Touch);
-            script.index_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.index_Touch));
-        EditorGUI.EndDisabledGroup();
+        AddSpace(6);
 
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Thumb_Touch", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.thumb_Touch);
-                script.thumb_Touch = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.thumb_Touch);
-            script.thumb_Touch = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.thumb_Touch));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Button1", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button1);
-                script.button1 = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button1);
-            script.button1 = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.button1));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Button2", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.button2);
-                script.button2 = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.button2);
-            script.button2 = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.button2));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Thumb_Press", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (ButtonIsUnused(script.lastButtonPressed))
-            {
-                RemoveKey(script.thumb_Press);
-                script.thumb_Press = LastButton; //Assign key if it isn't already used
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveKey(script.thumb_Press);
-            script.thumb_Press = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(JoystickStatus(script.thumb_Press));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.LabelField("Last Button Pressed: ", EditorStyles.boldLabel);
-        EditorGUILayout.TextField(script.lastButtonPressed.ToString());
-        EditorGUI.EndDisabledGroup();
-
-        #endregion
-
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
 
         //  ------------------------------- Axes
-        #region Axes
 
-        EditorGUILayout.LabelField("Axes", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("An Axis will be recognized best if it is NOT exactly 1 or -1. If axis is a joystick always move it either right or up!", MessageType.Warning, true);
+        EditorGUILayout.LabelField("Axes", header);
 
-        EditorGUILayout.LabelField("Thumb X", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
+        AddSpace(2);
+
+        AxisParameters info = DrawAxisInfo("ThumbX", script.thumbX, script.thumbXInverted, script.ThumbXStatus);
+        script.thumbX = info.num;
+        script.thumbXInverted = info.inverted;
+
+        info = DrawAxisInfo("ThumbY", script.thumbY, script.thumbYInverted, script.ThumbYStatus);
+        script.thumbY = info.num;
+        script.thumbYInverted = info.inverted;
+
+        info = DrawAxisInfo("Index", script.index, script.indexInverted, script.IndexStatus);
+        script.index = info.num;
+        script.indexInverted = info.inverted;
+
+        info = DrawAxisInfo("Grab", script.grab, script.grabInverted, script.GrabStatus);
+        script.grab = info.num;
+        script.grabInverted = info.inverted;
+
+        EditorGUILayout.LabelField("Last Axis used: " + script.lastAxisUsed, EditorStyles.boldLabel);
+
+        AddSpace(3);
+
+
+        GUI.backgroundColor = Color.yellow;
+        if (GUILayout.Button("Apply Settings", GUILayout.Height(50)))
         {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.thumbX, script.thumbXInverted);
-                script.thumbX = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
-                script.thumbXInverted = script.lastAxisNegative;
-            }
+            script.ApplySettings(true);
         }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.thumbX, script.thumbXInverted);
-            script.thumbX = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.thumbX, script.thumbXInverted));
-        EditorGUI.EndDisabledGroup();
+        GUI.backgroundColor = bColor;
 
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Thumb Y", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.thumbY, script.thumbYInverted);
-                script.thumbY = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
-                script.thumbYInverted = script.lastAxisNegative;
-
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.thumbY, script.thumbYInverted);
-            script.thumbY = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.thumbY, script.thumbYInverted));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Index", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.index, script.indexInverted);
-                script.index = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
-                script.indexInverted = script.lastAxisNegative;
-
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.index, script.indexInverted);
-            script.index = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.index, script.indexInverted));
-        EditorGUI.EndDisabledGroup();
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Grab", EditorStyles.largeLabel);
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Set"))
-        {
-            if (AxisIsUnused(script.lastAxisUsed))
-            {
-                RemoveAxis(script.grab, script.grabInverted);
-                script.grab = script.AxisToInt(script.lastAxisUsed); //Assign axis if it isn't already used
-                script.grabInverted = script.lastAxisNegative;
-            }
-        }
-        if (GUILayout.Button("Reset"))
-        {
-            RemoveAxis(script.grab, script.grabInverted);
-            script.grab = -1;
-        }
-        GUILayout.EndHorizontal();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.TextField(AxisStatus(script.grab, script.grabInverted));
-        EditorGUI.EndDisabledGroup();
-
-
-        #endregion
-
-        EditorGUILayout.Space();
-        EditorGUILayout.Space();
-
-
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.LabelField("Last Axis used: ", EditorStyles.boldLabel);
-        EditorGUILayout.TextField(script.lastAxisUsed);
-        EditorGUI.EndDisabledGroup();
-
-
-        
-
+        AddSpace(3);
     }
+
+    // ----------------------------- Methods
+
+
+    int DrawButtonInfo(string title, int currentKey, bool status)
+    {
+        int output = currentKey; // return input
+
+        EditorGUILayout.LabelField(title, EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+            if (ButtonIsUnused(script.lastButtonPressed))
+            {
+                RemoveKey(currentKey);
+                output = script.lastButtonPressed;
+                script.AddButton(output, script.KeysUsedCurrent);
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveKey(currentKey);
+            output = -1;
+        }
+        GUILayout.EndHorizontal();
+        //EditorGUI.BeginDisabledGroup(true);
+        if (status)
+        {
+            JoystickStatus(currentKey, true);
+        }
+        else
+        {
+            JoystickStatus(currentKey, false);
+        }
+        //EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.Space();
+
+        return output;
+    }
+
+    AxisParameters DrawAxisInfo(string title, int axisNum, bool inverted, bool status)
+    {
+        AxisParameters output = new AxisParameters(axisNum, inverted);
+
+
+        EditorGUILayout.LabelField(title, EditorStyles.largeLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Set"))
+        {
+
+            if (LastAxisIsUnused(axisNum, inverted))
+            {
+                RemoveAxis(axisNum, inverted);
+                output.num = script.AxisToInt(script.lastAxisUsed);
+                output.inverted = script.lastAxisNegative;
+                script.AddAxis(output.num, output.inverted, script.AxesUsedCurrent);
+            }
+        }
+        if (GUILayout.Button("Reset"))
+        {
+            RemoveAxis(axisNum, inverted);
+            output.num = -1;
+        }
+        GUILayout.EndHorizontal();
+        if (status)
+        {
+            AxisStatus(axisNum, inverted, true);
+        }
+        else
+        {
+            AxisStatus(axisNum, inverted, false);
+        }
+
+        EditorGUILayout.Space();
+
+        return output;
+    }
+
 
     string HandStatus()
     {
@@ -369,13 +238,102 @@ public class VRInputSetupInspector : Editor
     }
 
 
-    bool AxisIsUnused(string name)
+    bool LastAxisIsUnused(int num, bool inverted)
     {
-        bool unused = !script.AxesUsed.Contains(name);
-        if (unused) { script.AxesUsed.Add(name); }
+        string lastAxisUsed = script.lastAxisUsed;
+
+        bool unused = true;
+
+        bool originalIsInverted;
+
+        string[] parts = lastAxisUsed.Split();
+
+        string invertedName;
+        string normalName;
+
+        string oppositeName;
+
+        if (parts.Length > 1) // if there is '(inverted)' before the axis name
+        {
+            invertedName = lastAxisUsed;
+            normalName = parts[1];
+
+            oppositeName = normalName;
+
+            originalIsInverted = true;
+        }
         else
         {
-            Debug.LogError(name + " is already used!");
+            normalName = lastAxisUsed;
+            invertedName = "(inverted) " + lastAxisUsed;
+
+            oppositeName = invertedName;
+
+            originalIsInverted = false;
+        }
+
+        if (num > -1)
+        {
+            string current = InputAxis.FromIntBool(num, inverted);
+            if (current == oppositeName) { return true; } // assigning the same axis but (un)inverted is possible.
+        }
+
+        // TODO: Avoid having 12 if statements for creating specific error messages.
+
+        // Check current controller
+        if (script.AxesUsedCurrent.Contains(normalName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller in inverted variant.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller.");
+            }
+        }
+        else if (script.AxesUsedCurrent.Contains(invertedName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to current Controller in un-inverted variant.");
+            }
+        }
+
+        // Check other controller
+        if (script.AxesUsedOther.Contains(normalName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller in inverted variant.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller.");
+            }
+        }
+        else if (script.AxesUsedOther.Contains(invertedName))
+        {
+            if (originalIsInverted)
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller.");
+            }
+            else
+            {
+                unused = false;
+                Debug.LogError(lastAxisUsed + " is already assigned to other Controller in un-inverted variant.");
+            }
         }
 
         return unused;
@@ -383,51 +341,92 @@ public class VRInputSetupInspector : Editor
 
     bool ButtonIsUnused(int keyNum)
     {
-        bool unused = !script.KeysUsed.Contains(keyNum);
-        if (unused) { script.KeysUsed.Add(keyNum); }
-        else
+        if (script.KeysUsedCurrent.Contains(keyNum))
         {
-            Debug.LogError("JoystickButton" + keyNum + " is already used!");
+            Debug.LogError("JoystickButton" + keyNum + " is already used by this Controller!");
+            return false;
+        }
+        if (script.KeysUsedOther.Contains(keyNum))
+        {
+            Debug.LogError("JoystickButton" + keyNum + " is already used by the other Controller!");
+            return false;
         }
 
-        return unused;
+        return true;
     }
 
 
-    string JoystickStatus(int num)
+    void JoystickStatus(int num, bool error)
     {
-        if (num == -1) { return "Unassigned!"; }
+        if (num == -1)
+        {
+            EditorGUILayout.LabelField("Unassigned!", unassignedStyle);
+        }
         else
         {
-            return "JoystickButton" + num;
+            if (error)
+            {
+                EditorGUILayout.LabelField("JoystickButton" + num, errorStyle);
+            }
+            else
+            {
+                EditorGUILayout.LabelField("JoystickButton" + num, setStyle);
+            }
         }
     }
-    string AxisStatus(int num, bool inverted)
+
+    void AxisStatus(int num, bool inverted, bool error)
     {
-        if (num == -1) { return "Unassigned!"; }
+        if (num == -1)
+        {
+            EditorGUILayout.LabelField("Unassigned!", unassignedStyle);
+        }
         else
         {
-            return InputAxis.FromIntBool(num, inverted);
+            if (error)
+            {
+                EditorGUILayout.LabelField(InputAxis.FromIntBool(num, inverted), errorStyle);
+            }
+            else
+            {
+                EditorGUILayout.LabelField(InputAxis.FromIntBool(num, inverted), setStyle);
+            }
         }
     }
 
     void RemoveKey(int num)
     {
-        if (script.KeysUsed.Contains(num))
+        if (script.KeysUsedCurrent.Contains(num))
         {
-            script.KeysUsed.Remove(num);
+            script.KeysUsedCurrent.Remove(num);
+        }
+        else if (script.KeysUsedOther.Contains(num))
+        {
+            script.KeysUsedOther.Remove(num);
         }
     }
 
     void RemoveAxis(int num, bool inverted)
     {
+        if (num < 0) { return; }
         string name = InputAxis.FromIntBool(num, inverted);
 
-        if (script.AxesUsed.Contains(name))
+        if (script.AxesUsedCurrent.Contains(name))
         {
-            script.AxesUsed.Remove(name);
+            script.AxesUsedCurrent.Remove(name);
+        }
+        else if (script.AxesUsedOther.Contains(name))
+        {
+            script.AxesUsedOther.Remove(name);
         }
     }
 
+    void AddSpace(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            EditorGUILayout.Space();
+        }
+    }
 }
 

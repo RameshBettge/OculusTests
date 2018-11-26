@@ -31,9 +31,24 @@ public class InputAxis
         }
     }
 
+    public static string FromInt(int num)
+    {
+        if (num < 0)
+        {
+            Debug.LogError("Axis" + num + " does not exist!");
+            return "";
+        }
+
+        return "Axis" + num;
+    }
+
     public static string FromIntBool(int num, bool inverted)
     {
-        if (num < 0) { return ""; }
+        if (num < 0)
+        {
+            Debug.LogError("Axis" + num + " does not exist!");
+            return "";
+        }
 
         string sign = "";
         if (inverted) { sign = "(inverted) "; }
@@ -56,5 +71,17 @@ public class InputAxis
             num += ((int)System.Char.GetNumericValue(last)) * 10;
         }
         return num;
+    }
+}
+
+public struct AxisParameters
+{
+    public int num;
+    public bool inverted;
+
+    public AxisParameters(int num, bool inverted)
+    {
+        this.num = num;
+        this.inverted = inverted;
     }
 }

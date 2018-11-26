@@ -8,9 +8,7 @@ public class InputButton
 
     public InputButton(int joystickNum)
     {
-        string name = "JoystickButton" + joystickNum;
-        
-        button = (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
+        button = JoystickFromInt(joystickNum);
     }
 
     public InputButton(KeyCode keyCode)
@@ -23,4 +21,17 @@ public class InputButton
     public bool OnDown { get { return Input.GetKeyDown(button); } }
 
     public bool OnUp { get { return Input.GetKeyUp(button); } }
+
+    public static KeyCode JoystickFromInt(int num)
+    {
+        if(num < 0)
+        {
+            Debug.LogError("JoystickButton " + num + " doesn't exist!");
+            num = 0;
+        }
+
+        string name = "JoystickButton" + num;
+
+        return (KeyCode)System.Enum.Parse(typeof(KeyCode), name);
+    }
 }
