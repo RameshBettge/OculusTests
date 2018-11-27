@@ -29,6 +29,7 @@ public class VRInputSetupInspector : Editor
 
     public override void OnInspectorGUI()
     {
+
         errorStyle.fontSize = 12;
         float lightness = 0.35f;
         setStyle.normal.textColor = new Color(lightness, lightness, lightness);
@@ -145,6 +146,7 @@ public class VRInputSetupInspector : Editor
         GUI.backgroundColor = Color.yellow;
         if (GUILayout.Button("Apply Settings", GUILayout.Height(50)))
         {
+            EditorUtility.SetDirty(target);
             script.ApplySettings(true);
         }
         GUI.backgroundColor = bColor;

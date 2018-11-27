@@ -4,7 +4,7 @@
 public class InputAxis
 {
     public string name;
-    bool inverted;
+    public bool inverted;
 
     public InputAxis(int axisNum, bool inverted)
     {

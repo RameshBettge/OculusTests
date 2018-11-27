@@ -29,10 +29,13 @@ public class VRControllerEditor : Editor
     {
         DrawDefaultInspector();
 
+
         VRInputLookup script = (VRInputLookup)target;
 
         if (GUILayout.Button("Apply Settings"))
         {
+            EditorUtility.SetDirty(target); // Forces Unity to save changes
+
             script.Right.Apply();
             script.Left.Apply();
 
